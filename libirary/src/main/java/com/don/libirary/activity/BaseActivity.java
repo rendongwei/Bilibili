@@ -17,6 +17,7 @@ import com.don.libirary.annotation.ScreenOrientation;
 import com.don.libirary.annotation.TranslucentStatusBar;
 import com.don.libirary.util.DisplayUtil;
 import com.don.libirary.util.EmptyUtil;
+import com.don.libirary.util.ExitUtil;
 import com.don.libirary.util.StatusBarUtil;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -33,6 +34,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         mActivity = BaseActivity.this;
         mContext = BaseActivity.this;
         mContentView = View.inflate(mContext, getContentView(), null);
+        ExitUtil.getInstance().addActivity(mActivity);
         setFullScreen();
         setScreenOrientation();
         setStatusBarTranslucent();
@@ -40,6 +42,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         bindViews();
         bindListener();
         init();
+    }
+
+    @Override
+    protected void onDestroy() {
+        ExitUtil.getInstance().removeActivity(mActivity);
+        super.onDestroy();
     }
 
     /**
@@ -128,5 +136,25 @@ public abstract class BaseActivity extends AppCompatActivity {
             layout.setBackgroundDrawable(v.getBackground());
             mContentView = layout;
         }
+    }
+    protected void changeStatusBarColor(int color) {
+        if (mStatusBar == null) {
+            return;
+        }
+        mStatusBar.setBackgroundResource(color);
+    }
+
+    protected void changeStatusBarColor(String color) {
+        if (mStatusBar == null) {
+            return;
+        }
+        mStatusBar.setBackgroundColor(Color.parseColor(color));
+    }
+
+    protected void changeStatusBarVisibility(int visibility) {
+        if (mStatusBar == null) {
+            return;
+        }
+        mStatusBar.setVisibility(visibility);
     }
 }

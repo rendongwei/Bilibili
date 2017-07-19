@@ -3,7 +3,8 @@
     package="com.don.libirary">
 
     <application>
-        <activity android:name=".activity.BaseActivity"></activity>
+        <activity android:name=".activity.BaseActivity" />
+        <activity android:name=".activity.BindActivity"></activity>
     </application>
 
 </manifest>
