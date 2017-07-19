@@ -4,7 +4,7 @@
 
     <application>
         <activity android:name=".activity.BaseActivity" />
-        <activity android:name=".activity.BindActivity"></activity>
+        <activity android:name=".activity.BindActivity"/>
     </application>
 
 </manifest>

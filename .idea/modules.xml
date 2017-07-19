@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Bilibili.iml" filepath="$PROJECT_DIR$/Bilibili.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/libirary/libirary.iml" filepath="$PROJECT_DIR$/libirary/libirary.iml" />
     </modules>
   </component>
 </project>
