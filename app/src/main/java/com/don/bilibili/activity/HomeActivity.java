@@ -15,8 +15,6 @@ import com.don.bilibili.utils.DisplayUtil;
 public class HomeActivity extends TranslucentStatusBarActivity {
     @Id(id = R.id.home_layout_drawer)
     private DrawerLayout mDrawerLayout;
-    @Id(id = R.id.home_layout_content)
-    private LinearLayout mLayoutContent;
     @Id(id = R.id.home_layout_menu)
     private LinearLayout mLayoutMenu;
 
