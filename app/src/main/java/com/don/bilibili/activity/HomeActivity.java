@@ -5,7 +5,7 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.don.bilibili.HomeFragment;
+import com.don.bilibili.fragment.HomeFragment;
 import com.don.bilibili.R;
 import com.don.bilibili.activity.base.TranslucentStatusBarActivity;
 import com.don.bilibili.annotation.Id;
