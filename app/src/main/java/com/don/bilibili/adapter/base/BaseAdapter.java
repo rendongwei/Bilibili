@@ -2,7 +2,6 @@ package com.don.bilibili.adapter.base;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.ViewGroup;
 
 import com.don.bilibili.utils.EmptyUtil;
 
@@ -24,14 +23,8 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return getViewHolder(parent, viewType);
-    }
-
-    @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
     }
 
-    public abstract ViewHolder getViewHolder(ViewGroup parent, int viewType);
 }
