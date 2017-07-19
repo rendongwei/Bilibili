@@ -1,7 +1,7 @@
 package com.don.bilibili.fragment.base;
 
 import android.app.FragmentTransaction;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -10,13 +10,13 @@ import java.util.Map;
 
 public class FragmentManager {
 
-	private FragmentActivity mActivity;
+	private AppCompatActivity mActivity;
 	private BaseFragment mFragment;
 
 	private Class<? extends BaseFragment> mShowClass;
 	private Map<Class<? extends BaseFragment>, BaseFragment> mFragments = new HashMap<Class<? extends BaseFragment>, BaseFragment>();
 
-	public FragmentManager(FragmentActivity activity) {
+	public FragmentManager(AppCompatActivity activity) {
 		mActivity = activity;
 	}
 

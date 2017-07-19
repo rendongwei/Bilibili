@@ -1,7 +1,7 @@
 package com.don.bilibili.activity.base;
 
-import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Build;
@@ -23,7 +23,7 @@ import com.don.bilibili.utils.StatusBarUtil;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    protected Activity mActivity;
+    protected AppCompatActivity mActivity;
     protected Context mContext;
     private View mContentView;
     private View mStatusBar;
@@ -138,6 +138,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             mContentView = layout;
         }
     }
+
     protected void changeStatusBarColor(int color) {
         if (mStatusBar == null) {
             return;
@@ -157,5 +158,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             return;
         }
         mStatusBar.setVisibility(visibility);
+    }
+
+    protected void intentTo(Class<?> cls) {
+        startActivity(new Intent(mContext, cls));
     }
 }

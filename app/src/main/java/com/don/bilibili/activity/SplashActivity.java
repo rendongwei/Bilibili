@@ -1,11 +1,15 @@
 package com.don.bilibili.activity;
 
+import android.os.Handler;
+
 import com.don.bilibili.R;
 import com.don.bilibili.activity.base.BindActivity;
 import com.don.bilibili.annotation.FullScreen;
 
 @FullScreen
 public class SplashActivity extends BindActivity {
+
+    Handler mHandler = new Handler();
 
     @Override
     protected int getContentView() {
@@ -19,6 +23,12 @@ public class SplashActivity extends BindActivity {
 
     @Override
     protected void init() {
-
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                intentTo(HomeActivity.class);
+                finish();
+            }
+        },2000);
     }
 }
