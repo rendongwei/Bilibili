@@ -153,4 +153,8 @@ public class LiveFragment extends BindFragment implements View.OnClickListener{
             }
         }));
     }
+
+    private void getCommon(){
+        HttpManager.getInstance().getApiSevice().getCommon();
+    }
 }
