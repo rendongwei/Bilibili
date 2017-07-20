@@ -1,6 +1,7 @@
 package com.don.bilibili.fragment.home;
 
 
+import android.graphics.Rect;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,8 +14,10 @@ import com.don.bilibili.R;
 import com.don.bilibili.annotation.Id;
 import com.don.bilibili.annotation.OnClick;
 import com.don.bilibili.fragment.base.BindFragment;
+import com.don.bilibili.utils.DisplayUtil;
 import com.don.bilibili.utils.Util;
 import com.don.bilibili.view.AutoScrollViewPager;
+import com.don.bilibili.view.DividerItemDecoration;
 
 public class LiveFragment extends BindFragment implements View.OnClickListener{
 
@@ -70,11 +73,47 @@ public class LiveFragment extends BindFragment implements View.OnClickListener{
     @Override
     protected void init() {
         Util.initRefresh(mLayoutRefresh);
+        initRecyclerView();
+        mLayoutRefresh.setRefreshing(true);
+    }
+
+    @Override
+    public void onClick(View view) {
+
+    }
+
+    private void initRecyclerView(){
         mLvRecommend.setNestedScrollingEnabled(false);
         mLvRecommend.setLayoutManager(Util.getGridLayoutManager(mContext, 2, new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
                 return position == 0 || position == 7 || position == 14 ? 2 : 1;
+            }
+        }));
+        mLvRecommend.addItemDecoration(new DividerItemDecoration(new DividerItemDecoration.OnDividerItemDecorationListener() {
+            @Override
+            public Rect getOffsets(int position) {
+                int width = DisplayUtil.getWidth(mContext);
+                int halfWidth = width / 2;
+                int left = 0;
+                int top = 0;
+                int right = 0;
+                int bottom = 0;
+                if (position % 6 == 0 || (position + 1) % 6 == 0) {
+                    left = width;
+                    right = width;
+                } else {
+                    bottom = (position + 1) % 6 == 4 || (position + 1) % 6 == 5 ? 0
+                            : width;
+                    if (position % 2 == 1) {
+                        left = width;
+                        right = halfWidth;
+                    } else if (position % 2 == 0) {
+                        left = halfWidth;
+                        right = width;
+                    }
+                }
+                return new Rect(left, top, right, bottom);
             }
         }));
 
@@ -85,10 +124,31 @@ public class LiveFragment extends BindFragment implements View.OnClickListener{
                 return position % 6 == 0 || (position + 1) % 6 == 0 ? 2 : 1;
             }
         }));
-    }
-
-    @Override
-    public void onClick(View view) {
-
+        mLvCategory.addItemDecoration(new DividerItemDecoration(new DividerItemDecoration.OnDividerItemDecorationListener() {
+            @Override
+            public Rect getOffsets(int position) {
+                int width = DisplayUtil.getWidth(mContext);
+                int halfWidth = width / 2;
+                int left = 0;
+                int top = 0;
+                int right = 0;
+                int bottom = 0;
+                if (position % 6 == 0 || (position + 1) % 6 == 0) {
+                    left = width;
+                    right = width;
+                } else {
+                    bottom = (position + 1) % 6 == 4 || (position + 1) % 6 == 5 ? 0
+                            : width;
+                    if (position % 2 == 1) {
+                        left = width;
+                        right = halfWidth;
+                    } else if (position % 2 == 0) {
+                        left = halfWidth;
+                        right = width;
+                    }
+                }
+                return new Rect(left, top, right, bottom);
+            }
+        }));
     }
 }
