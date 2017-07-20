@@ -121,7 +121,7 @@ public class LiveFragment extends BindFragment implements View.OnClickListener {
         mLvRecommend.addItemDecoration(new DividerItemDecoration(new DividerItemDecoration.OnDividerItemDecorationListener() {
             @Override
             public Rect getOffsets(int position) {
-                int width = DisplayUtil.getWidth(mContext);
+                int width = DisplayUtil.dip2px(mContext, 15);
                 int halfWidth = width / 2;
                 int left = 0;
                 int top = 0;
@@ -152,10 +152,12 @@ public class LiveFragment extends BindFragment implements View.OnClickListener {
                 return position % 6 == 0 || (position + 1) % 6 == 0 ? 2 : 1;
             }
         }));
+
+
         mLvCategory.addItemDecoration(new DividerItemDecoration(new DividerItemDecoration.OnDividerItemDecorationListener() {
             @Override
             public Rect getOffsets(int position) {
-                int width = DisplayUtil.getWidth(mContext);
+                int width = DisplayUtil.dip2px(mContext, 15);
                 int halfWidth = width / 2;
                 int left = 0;
                 int top = 0;

@@ -3,7 +3,6 @@ package com.don.bilibili.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -94,17 +93,17 @@ public class HomeLiveCategoryAdapter extends BaseAdapter<HomeLiveCategory> {
         RecyclerView.ViewHolder holder = null;
         switch (type) {
             case 0:
-                view = LayoutInflater.from(mContext).inflate(R.layout.listitem_home_live_head, parent, false);
+                view = View.inflate(mContext,R.layout.listitem_home_live_head,null);
                 holder = new HeadViewHolder(view);
                 break;
 
             case 1:
-                view = LayoutInflater.from(mContext).inflate(R.layout.listitem_home_live_foot, parent, false);
+                view = View.inflate(mContext,R.layout.listitem_home_live_foot,null);
                 holder = new FootViewHolder(view);
                 break;
 
             case 2:
-                view = LayoutInflater.from(mContext).inflate(R.layout.listitem_home_live, parent, false);
+                view = View.inflate(mContext,R.layout.listitem_home_live,null);
                 holder = new ItemViewHolder(view);
                 break;
         }
