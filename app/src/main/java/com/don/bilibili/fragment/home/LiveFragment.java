@@ -14,6 +14,7 @@ import com.don.bilibili.R;
 import com.don.bilibili.annotation.Id;
 import com.don.bilibili.annotation.OnClick;
 import com.don.bilibili.fragment.base.BindFragment;
+import com.don.bilibili.http.HttpManager;
 import com.don.bilibili.utils.DisplayUtil;
 import com.don.bilibili.utils.Util;
 import com.don.bilibili.view.AutoScrollViewPager;
@@ -75,6 +76,7 @@ public class LiveFragment extends BindFragment implements View.OnClickListener{
         Util.initRefresh(mLayoutRefresh);
         initRecyclerView();
         mLayoutRefresh.setRefreshing(true);
+        HttpManager.getInstance();
     }
 
     @Override
