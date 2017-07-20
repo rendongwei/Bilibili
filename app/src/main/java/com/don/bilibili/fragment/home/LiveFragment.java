@@ -20,7 +20,13 @@ import com.don.bilibili.utils.Util;
 import com.don.bilibili.view.AutoScrollViewPager;
 import com.don.bilibili.view.DividerItemDecoration;
 
-public class LiveFragment extends BindFragment implements View.OnClickListener{
+import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class LiveFragment extends BindFragment implements View.OnClickListener {
 
     @Id(id = R.id.live_layout_refresh)
     private SwipeRefreshLayout mLayoutRefresh;
@@ -57,7 +63,7 @@ public class LiveFragment extends BindFragment implements View.OnClickListener{
     @Id(id = R.id.live_layout_error)
     private LinearLayout mLayoutError;
 
-    public LiveFragment(){
+    public LiveFragment() {
 
     }
 
@@ -76,7 +82,7 @@ public class LiveFragment extends BindFragment implements View.OnClickListener{
         Util.initRefresh(mLayoutRefresh);
         initRecyclerView();
         mLayoutRefresh.setRefreshing(true);
-        HttpManager.getInstance();
+        getCommon();
     }
 
     @Override
@@ -84,7 +90,7 @@ public class LiveFragment extends BindFragment implements View.OnClickListener{
 
     }
 
-    private void initRecyclerView(){
+    private void initRecyclerView() {
         mLvRecommend.setNestedScrollingEnabled(false);
         mLvRecommend.setLayoutManager(Util.getGridLayoutManager(mContext, 2, new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -154,7 +160,17 @@ public class LiveFragment extends BindFragment implements View.OnClickListener{
         }));
     }
 
-    private void getCommon(){
-        HttpManager.getInstance().getApiSevice().getCommon();
+    private void getCommon() {
+        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getCommon("android", "1d8b6e7d45233436", "506000", "android", "android", "xxhdpi", "1497417266", "78cb52d64155cc90ed303d2d3c8be9cb");
+        call.enqueue(new Callback<JSONObject>() {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
+                System.out.println(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t) {
+            }
+        });
     }
 }
