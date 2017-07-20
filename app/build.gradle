@@ -29,4 +29,5 @@ dependencies {
     compile 'com.android.support.test:runner:0.5'
     compile 'com.squareup.retrofit2:retrofit:2.0.0'
     compile 'com.squareup.retrofit2:converter-scalars:2.0.2'
+    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
 }

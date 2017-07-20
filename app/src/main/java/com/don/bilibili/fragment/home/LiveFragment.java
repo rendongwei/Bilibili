@@ -16,11 +16,13 @@ import com.don.bilibili.Model.HomeLiveBanner;
 import com.don.bilibili.Model.HomeLiveCategory;
 import com.don.bilibili.Model.HomeLiveCategoryBanner;
 import com.don.bilibili.R;
+import com.don.bilibili.adapter.LiveBannerAdapter;
 import com.don.bilibili.annotation.Id;
 import com.don.bilibili.annotation.OnClick;
 import com.don.bilibili.fragment.base.BindFragment;
 import com.don.bilibili.http.HttpManager;
 import com.don.bilibili.utils.DisplayUtil;
+import com.don.bilibili.utils.EmptyUtil;
 import com.don.bilibili.utils.Util;
 import com.don.bilibili.view.AutoScrollViewPager;
 import com.don.bilibili.view.DividerItemDecoration;
@@ -72,7 +74,7 @@ public class LiveFragment extends BindFragment implements View.OnClickListener {
     private LinearLayout mLayoutError;
 
     private List<HomeLiveBanner> mBanners = new ArrayList<HomeLiveBanner>();
-    //    private LiveBannerAdapter mBannerAdapter;
+    private LiveBannerAdapter mBannerAdapter;
     private HomeLiveCategory mCategoryRecommend;
     private HomeLiveCategoryBanner mCategoryRecommendBanner;
 //    private HomeLiveRecommendAdapter mCategoryRecommendAdapter;
@@ -180,8 +182,8 @@ public class LiveFragment extends BindFragment implements View.OnClickListener {
     private void initBanner() {
         initPoint();
         initPoint(0);
-//        mBannerAdapter = new LiveBannerAdapter(mContext, mBanners);
-//        mVpBanner.setAdapter(mBannerAdapter);
+        mBannerAdapter = new LiveBannerAdapter(mContext, mBanners);
+        mVpBanner.setAdapter(mBannerAdapter);
         int position = 0;
         position += 1000 * 3;
         mVpBanner.setInterval(3000);
@@ -216,6 +218,38 @@ public class LiveFragment extends BindFragment implements View.OnClickListener {
         }
     }
 
+    private void setData() {
+        if (EmptyUtil.isEmpty(mBanners) && mCategoryRecommend == null
+                && EmptyUtil.isEmpty(mCategories)) {
+            mLayoutContainer.setVisibility(View.GONE);
+            mLayoutError.setVisibility(View.VISIBLE);
+        } else {
+            mLayoutContainer.setVisibility(View.VISIBLE);
+            mLayoutError.setVisibility(View.GONE);
+
+            if (EmptyUtil.isEmpty(mBanners)) {
+                mLayoutBanner.setVisibility(View.GONE);
+            } else {
+                mLayoutBanner.setVisibility(View.VISIBLE);
+                initBanner();
+            }
+
+//            if (mCategoryRecommend != null) {
+//                mCategoryRecommendAdapter = new HomeLiveRecommendAdapter(
+//                        mContext, this, mCategoryRecommend,
+//                        mCategoryRecommendBanner);
+//                mLvRecommend.setAdapter(mCategoryRecommendAdapter);
+//            }
+//
+//            if (!EmptyUtil.isEmpty(mCategories)) {
+//                mCategoryAdapter = new HomeLiveCategoryAdapter(mContext, this,
+//                        mCategories);
+//                mLvCategory.setAdapter(mCategoryAdapter);
+//            }
+        }
+        mLayoutRefresh.setRefreshing(false);
+    }
+
     private void getCommon() {
         Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getCommon("android", "1d8b6e7d45233436", "506000", "android", "android", "xxhdpi", "1497417266", "78cb52d64155cc90ed303d2d3c8be9cb");
         call.enqueue(new Callback<JSONObject>() {
@@ -232,6 +266,7 @@ public class LiveFragment extends BindFragment implements View.OnClickListener {
                                 object.optJSONArray("partitions"));
                     }
                 }
+                setData();
             }
 
             @Override

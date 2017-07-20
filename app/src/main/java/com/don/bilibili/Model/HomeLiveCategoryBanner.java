@@ -1,7 +1,10 @@
 package com.don.bilibili.Model;
 
-import com.don.libirary.json.Json;
-import com.don.libirary.json.annotation.Name;
+
+import android.graphics.drawable.Icon;
+
+import com.don.bilibili.Json.Json;
+import com.don.bilibili.Json.annotation.Name;
 
 public class HomeLiveCategoryBanner extends Json {
 

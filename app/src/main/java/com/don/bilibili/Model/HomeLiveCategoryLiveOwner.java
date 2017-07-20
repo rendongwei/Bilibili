@@ -1,6 +1,7 @@
 package com.don.bilibili.Model;
 
-import com.don.libirary.json.Json;
+
+import com.don.bilibili.Json.Json;
 
 public class HomeLiveCategoryLiveOwner extends Json {
 
