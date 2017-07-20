@@ -1,6 +1,6 @@
 package com.don.bilibili.fragment.base;
 
-import android.app.FragmentTransaction;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +29,7 @@ public class FragmentManager {
 			return mFragment.getFragmentManager().beginTransaction();
 		}
 		if (mFragment == null) {
-			return mActivity.getFragmentManager().beginTransaction();
+			return mActivity.getSupportFragmentManager().beginTransaction();
 		}
 		return null;
 	}

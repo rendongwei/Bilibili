@@ -22,9 +22,7 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
         return EmptyUtil.isEmpty(mList) ? 0 : mList.size();
     }
 
-    @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
+    public T get(int position){
+        return  mList.get(position);
     }
-
 }

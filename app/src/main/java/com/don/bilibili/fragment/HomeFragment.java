@@ -1,6 +1,7 @@
 package com.don.bilibili.fragment;
 
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
@@ -9,12 +10,16 @@ import android.widget.TextView;
 
 import com.don.bilibili.R;
 import com.don.bilibili.activity.HomeActivity;
+import com.don.bilibili.adapter.TabAdapter;
 import com.don.bilibili.annotation.Id;
 import com.don.bilibili.annotation.OnClick;
 import com.don.bilibili.fragment.base.BindFragment;
+import com.don.bilibili.fragment.home.LiveFragment;
 import com.don.bilibili.utils.DisplayUtil;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HomeFragment extends BindFragment implements View.OnClickListener {
 
@@ -54,6 +59,8 @@ public class HomeFragment extends BindFragment implements View.OnClickListener {
     @Id(id = R.id.home_iv_recommend_head_attention)
     private ImageView mIvRecommendHeadAttention;
 
+    private LiveFragment mLiveFragment;
+
     @Override
     protected int getContentView() {
         return R.layout.fragment_home;
@@ -81,7 +88,14 @@ public class HomeFragment extends BindFragment implements View.OnClickListener {
 
     @Override
     protected void init() {
-
+        List<Fragment> mFragments = new ArrayList<Fragment>();
+        mLiveFragment = new LiveFragment();
+        mFragments.add(mLiveFragment);
+//        mVpDisplay.setOffscreenPageLimit(6);
+        mVpDisplay.setAdapter(new TabAdapter(getChildFragmentManager(),
+                mFragments,"直播", "推荐", "追番", "分区", "动态", "发现"));
+        mLayoutTab.setupWithViewPager(mVpDisplay);
+//        mVpDisplay.setCurrentItem(1);
     }
 
     @Override
