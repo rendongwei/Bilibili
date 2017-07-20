@@ -9,7 +9,7 @@ import java.util.List;
 
 public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private Context mContext;
+    protected Context mContext;
     private List<T> mList;
 
     public BaseAdapter(Context context, List<T> list) {
@@ -25,4 +25,6 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
     public T get(int position){
         return  mList.get(position);
     }
+
+    public List<T> getAll(){return  mList;}
 }

@@ -16,6 +16,7 @@ import com.don.bilibili.Model.HomeLiveBanner;
 import com.don.bilibili.Model.HomeLiveCategory;
 import com.don.bilibili.Model.HomeLiveCategoryBanner;
 import com.don.bilibili.R;
+import com.don.bilibili.adapter.HomeLiveCategoryAdapter;
 import com.don.bilibili.adapter.LiveBannerAdapter;
 import com.don.bilibili.annotation.Id;
 import com.don.bilibili.annotation.OnClick;
@@ -80,7 +81,7 @@ public class LiveFragment extends BindFragment implements View.OnClickListener {
 //    private HomeLiveRecommendAdapter mCategoryRecommendAdapter;
 
     private List<HomeLiveCategory> mCategories = new ArrayList<HomeLiveCategory>();
-//    private HomeLiveCategoryAdapter mCategoryAdapter;
+    private HomeLiveCategoryAdapter mCategoryAdapter;
 
     public LiveFragment() {
 
@@ -241,11 +242,10 @@ public class LiveFragment extends BindFragment implements View.OnClickListener {
 //                mLvRecommend.setAdapter(mCategoryRecommendAdapter);
 //            }
 //
-//            if (!EmptyUtil.isEmpty(mCategories)) {
-//                mCategoryAdapter = new HomeLiveCategoryAdapter(mContext, this,
-//                        mCategories);
-//                mLvCategory.setAdapter(mCategoryAdapter);
-//            }
+            if (!EmptyUtil.isEmpty(mCategories)) {
+                mCategoryAdapter = new HomeLiveCategoryAdapter(mContext, mCategories);
+                mLvCategory.setAdapter(mCategoryAdapter);
+            }
         }
         mLayoutRefresh.setRefreshing(false);
     }
