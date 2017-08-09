@@ -21,4 +21,7 @@ public interface RetrofitApiService {
 
     @GET("AppIndex/dynamic")
     Call<JSONObject> getLiveCategoryRefresh(@Query("_device") String device, @Query("appkey") String key, @Query("area") String area, @Query("build") String build, @Query("mobi_app") String mobi_app, @Query("platform") String platform, @Query("ts") String ts, @Query("sign") String sign);
+
+    @GET("mobile/rooms")
+    Call<JSONObject> getLiveAll(@Query("_device") String device, @Query("_hwid") String hwid, @Query("appkey") String key, @Query("area_id") int area, @Query("build") String build, @Query("mobi_app") String mobi_app, @Query("page") int page, @Query("platform") String platform, @Query("sort") String sort, @Query("src") String src, @Query("trace_id") String trace_id, @Query("ts") String ts, @Query("version") String version, @Query("sign") String sign);
 }

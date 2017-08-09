@@ -1,6 +1,7 @@
 package com.don.bilibili.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Html;
@@ -22,6 +23,7 @@ import com.don.bilibili.Model.HomeLiveCategoryBanner;
 import com.don.bilibili.Model.HomeLiveCategoryLive;
 import com.don.bilibili.Model.HomeLiveCategoryLivePartition;
 import com.don.bilibili.R;
+import com.don.bilibili.activity.live.LiveAllActivity;
 import com.don.bilibili.fragment.home.LiveFragment;
 import com.don.bilibili.image.ImageManager;
 import com.don.bilibili.utils.TextLinkUtil;
@@ -234,7 +236,7 @@ public class HomeLiveRecommendAdapter extends
 
 		@Override
 		public void onClick(View v) {
-//			mContext.startActivity(new Intent(mContext, LiveAllActivity.class));
+			mContext.startActivity(new Intent(mContext, LiveAllActivity.class));
 		}
 	}
 
@@ -269,7 +271,7 @@ public class HomeLiveRecommendAdapter extends
 		public void onClick(View v) {
 			switch (v.getId()) {
 			case R.id.listitem_home_live_foot_tv_more:
-//				mContext.startActivity(new Intent(mContext, LiveAllActivity.class));
+				mContext.startActivity(new Intent(mContext, LiveAllActivity.class));
 				break;
 
 			case R.id.listitem_home_live_foot_tv_content:
