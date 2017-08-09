@@ -1,7 +1,6 @@
 package com.don.bilibili.Model;
 
 
-import android.graphics.drawable.Icon;
 
 import com.don.bilibili.Json.Json;
 import com.don.bilibili.Json.annotation.Name;

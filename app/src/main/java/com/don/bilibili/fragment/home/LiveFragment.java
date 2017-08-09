@@ -15,8 +15,10 @@ import com.don.bilibili.Json.Json;
 import com.don.bilibili.Model.HomeLiveBanner;
 import com.don.bilibili.Model.HomeLiveCategory;
 import com.don.bilibili.Model.HomeLiveCategoryBanner;
+import com.don.bilibili.Model.HomeLiveCategoryLive;
 import com.don.bilibili.R;
 import com.don.bilibili.adapter.HomeLiveCategoryAdapter;
+import com.don.bilibili.adapter.HomeLiveRecommendAdapter;
 import com.don.bilibili.adapter.LiveBannerAdapter;
 import com.don.bilibili.annotation.Id;
 import com.don.bilibili.annotation.OnClick;
@@ -28,6 +30,7 @@ import com.don.bilibili.utils.Util;
 import com.don.bilibili.view.AutoScrollViewPager;
 import com.don.bilibili.view.DividerItemDecoration;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -78,7 +81,7 @@ public class LiveFragment extends BindFragment implements View.OnClickListener {
     private LiveBannerAdapter mBannerAdapter;
     private HomeLiveCategory mCategoryRecommend;
     private HomeLiveCategoryBanner mCategoryRecommendBanner;
-//    private HomeLiveRecommendAdapter mCategoryRecommendAdapter;
+    private HomeLiveRecommendAdapter mCategoryRecommendAdapter;
 
     private List<HomeLiveCategory> mCategories = new ArrayList<HomeLiveCategory>();
     private HomeLiveCategoryAdapter mCategoryAdapter;
@@ -94,7 +97,13 @@ public class LiveFragment extends BindFragment implements View.OnClickListener {
 
     @Override
     protected void bindListener() {
+        mLayoutRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 
+            @Override
+            public void onRefresh() {
+                getCommon();
+            }
+        });
     }
 
     @Override
@@ -237,13 +246,13 @@ public class LiveFragment extends BindFragment implements View.OnClickListener {
                 initBanner();
             }
 
-//            if (mCategoryRecommend != null) {
-//                mCategoryRecommendAdapter = new HomeLiveRecommendAdapter(
-//                        mContext, this, mCategoryRecommend,
-//                        mCategoryRecommendBanner);
-//                mLvRecommend.setAdapter(mCategoryRecommendAdapter);
-//            }
-//
+            if (mCategoryRecommend != null) {
+                mCategoryRecommendAdapter = new HomeLiveRecommendAdapter(
+                        mContext, this, mCategoryRecommend,
+                        mCategoryRecommendBanner);
+                mLvRecommend.setAdapter(mCategoryRecommendAdapter);
+            }
+
             if (!EmptyUtil.isEmpty(mCategories)) {
                 mCategoryAdapter = new HomeLiveCategoryAdapter(mContext, mCategories);
                 mLvCategory.setAdapter(mCategoryAdapter);
@@ -253,7 +262,7 @@ public class LiveFragment extends BindFragment implements View.OnClickListener {
     }
 
     private void getCommon() {
-        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getCommon("android", "1d8b6e7d45233436", "506000", "android", "android", "xxhdpi", "1497417266", "78cb52d64155cc90ed303d2d3c8be9cb");
+        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getLiveCommon("android", "1d8b6e7d45233436", "506000", "android", "android", "xxhdpi", "1497417266", "78cb52d64155cc90ed303d2d3c8be9cb");
         call.enqueue(new Callback<JSONObject>() {
             @Override
             public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
@@ -268,11 +277,55 @@ public class LiveFragment extends BindFragment implements View.OnClickListener {
                                 object.optJSONArray("partitions"));
                     }
                 }
+                getRecommend();
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t) {
+                getRecommend();
+            }
+        });
+    }
+
+    private void getRecommend() {
+        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getLiveRecommend("android", "58da0ccf15c44446a027990e5b90eab6", "1d8b6e7d45233436", "506000", "android", "android", "xxhdpi", "1497418171", "f079efd3c40deab99f7cf65de485ce82");
+        call.enqueue(new Callback<JSONObject>() {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
+                if (response.body().optInt("code", -1) == 0) {
+                    JSONObject object = response.body().optJSONObject("data");
+                    if (object != null) {
+                        JSONObject o = object
+                                .optJSONObject("recommend_data");
+                        if (o != null) {
+                            mCategoryRecommend = new HomeLiveCategory();
+                            mCategoryRecommend.parse(o);
+                            JSONArray bannerArray = o
+                                    .optJSONArray("banner_data");
+                            if (bannerArray != null
+                                    && bannerArray.length() > 0) {
+                                mCategoryRecommendBanner = new HomeLiveCategoryBanner();
+                                JSONObject bannerObject = bannerArray
+                                        .optJSONObject(0);
+                                if (bannerObject.optInt("is_clip", -1) == -1) {
+                                    HomeLiveCategoryLive live = new HomeLiveCategoryLive();
+                                    live.parse(bannerObject);
+                                    mCategoryRecommendBanner
+                                            .setLive(live);
+                                } else {
+                                    mCategoryRecommendBanner
+                                            .parse(bannerObject);
+                                }
+                            }
+                        }
+                    }
+                }
                 setData();
             }
 
             @Override
             public void onFailure(Call<JSONObject> call, Throwable t) {
+                setData();
             }
         });
     }

@@ -4,22 +4,22 @@ import retrofit2.Retrofit;
 
 public class HttpManager {
 
-    private static volatile  HttpManager mManager;
+    private static volatile HttpManager mManager;
     private Retrofit mApiRetrofit;
 
-    private HttpManager(){
+    private HttpManager() {
         mApiRetrofit = new Retrofit.Builder().baseUrl("http://api.live.bilibili.com").addConverterFactory(JsonObjectConverterFactory.create())
                 .build();
     }
 
-    public static synchronized  HttpManager getInstance(){
-        if (mManager == null){
-           mManager = new HttpManager();
+    public static synchronized HttpManager getInstance() {
+        if (mManager == null) {
+            mManager = new HttpManager();
         }
-        return  mManager;
+        return mManager;
     }
 
-    public RetrofitApiService getApiSevice(){
-        return  mApiRetrofit.create(RetrofitApiService.class);
+    public RetrofitApiService getApiSevice() {
+        return mApiRetrofit.create(RetrofitApiService.class);
     }
 }

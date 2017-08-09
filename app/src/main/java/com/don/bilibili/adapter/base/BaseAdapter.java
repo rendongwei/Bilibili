@@ -1,6 +1,7 @@
 package com.don.bilibili.adapter.base;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 
 import com.don.bilibili.utils.EmptyUtil;
@@ -22,9 +23,15 @@ public abstract class BaseAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
         return EmptyUtil.isEmpty(mList) ? 0 : mList.size();
     }
 
-    public T get(int position){
-        return  mList.get(position);
+    public T get(int position) {
+        return mList.get(position);
     }
 
-    public List<T> getAll(){return  mList;}
+    public List<T> getAll() {
+        return mList;
+    }
+
+    public void startActivity(Intent intent) {
+        mContext.startActivity(intent);
+    }
 }
