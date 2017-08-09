@@ -1,6 +1,7 @@
 package com.don.bilibili.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Html;
@@ -17,6 +18,7 @@ import com.don.bilibili.Model.HomeLiveCategory;
 import com.don.bilibili.Model.HomeLiveCategoryLive;
 import com.don.bilibili.Model.HomeLiveCategoryLivePartition;
 import com.don.bilibili.R;
+import com.don.bilibili.activity.live.LiveAreaActivity;
 import com.don.bilibili.fragment.home.LiveFragment;
 import com.don.bilibili.image.ImageManager;
 
@@ -192,9 +194,9 @@ public class HomeLiveCategoryAdapter extends
             int p = getAdapterPosition() / 6;
             HomeLiveCategory category = mCategories.get(p);
             HomeLiveCategoryLivePartition partition = category.getPartition();
-//            Intent intent = new Intent(mContext, LiveAreaActivity.class);
-//            intent.putExtra("partition", partition);
-//            mContext.startActivity(intent);
+            Intent intent = new Intent(mContext, LiveAreaActivity.class);
+            intent.putExtra("partition", partition);
+            mContext.startActivity(intent);
         }
     }
 
@@ -232,9 +234,9 @@ public class HomeLiveCategoryAdapter extends
             HomeLiveCategoryLivePartition partition = category.getPartition();
             switch (v.getId()) {
                 case R.id.listitem_home_live_foot_tv_more:
-//                    Intent intent = new Intent(mContext, LiveAreaActivity.class);
-//                    intent.putExtra("partition", partition);
-//                    mContext.startActivity(intent);
+                    Intent intent = new Intent(mContext, LiveAreaActivity.class);
+                    intent.putExtra("partition", partition);
+                    mContext.startActivity(intent);
                     break;
 
                 case R.id.listitem_home_live_foot_tv_content:
