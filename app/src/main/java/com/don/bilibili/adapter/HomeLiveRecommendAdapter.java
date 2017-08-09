@@ -278,7 +278,7 @@ public class HomeLiveRecommendAdapter extends
 					return;
 				}
 				setRefreshing(true, false);
-//				mFragment.getRecommendRefresh();
+				mFragment.getRecommendRefresh();
 				break;
 			}
 		}

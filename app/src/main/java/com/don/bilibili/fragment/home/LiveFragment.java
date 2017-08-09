@@ -34,6 +34,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -136,12 +137,11 @@ public class LiveFragment extends BindFragment implements View.OnClickListener {
                 int top = 0;
                 int right = 0;
                 int bottom = 0;
-                if (position % 6 == 0 || (position + 1) % 6 == 0) {
+                if (position == 0) {
                     left = width;
                     right = width;
-                } else {
-                    bottom = (position + 1) % 6 == 4 || (position + 1) % 6 == 5 ? 0
-                            : width;
+                } else if (position < 7) {
+                    bottom = width;
                     if (position % 2 == 1) {
                         left = width;
                         right = halfWidth;
@@ -149,6 +149,22 @@ public class LiveFragment extends BindFragment implements View.OnClickListener {
                         left = halfWidth;
                         right = width;
                     }
+                } else if (position == 7) {
+                    left = width;
+                    right = width;
+                    bottom = width;
+                } else if (position < 14) {
+                    bottom = position > 11 ? 0 : width;
+                    if (position % 2 == 0) {
+                        left = width;
+                        right = halfWidth;
+                    } else if (position % 2 == 1) {
+                        left = halfWidth;
+                        right = width;
+                    }
+                } else {
+                    left = width;
+                    right = width;
                 }
                 return new Rect(left, top, right, bottom);
             }
@@ -254,7 +270,7 @@ public class LiveFragment extends BindFragment implements View.OnClickListener {
             }
 
             if (!EmptyUtil.isEmpty(mCategories)) {
-                mCategoryAdapter = new HomeLiveCategoryAdapter(mContext, mCategories);
+                mCategoryAdapter = new HomeLiveCategoryAdapter(mContext, this, mCategories);
                 mLvCategory.setAdapter(mCategoryAdapter);
             }
         }
@@ -326,6 +342,126 @@ public class LiveFragment extends BindFragment implements View.OnClickListener {
             @Override
             public void onFailure(Call<JSONObject> call, Throwable t) {
                 setData();
+            }
+        });
+    }
+
+    public void getRecommendRefresh() {
+        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getLiveRecommendRefresh("android", "1d8b6e7d45233436", "506000", "android", "android", "xxhdpi", "1497574830", "8789ca8936efd1f21d3d4cd8c303b9f3");
+        call.enqueue(new Callback<JSONObject>() {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
+                if (response.body().optInt("code", -1) == 0) {
+                    JSONObject object = response.body().optJSONObject("data");
+                    if (object != null) {
+                        List<HomeLiveCategoryLive> lives = Json
+                                .parseJsonArray(
+                                        HomeLiveCategoryLive.class,
+                                        object.optJSONArray("lives"));
+                        mCategoryRecommend.getLives().clear();
+                        mCategoryRecommend.getLives().addAll(lives);
+                        JSONArray bannerArray = object
+                                .optJSONArray("banner_data");
+                        if (bannerArray != null
+                                && bannerArray.length() > 0) {
+                            mCategoryRecommendBanner = new HomeLiveCategoryBanner();
+                            JSONObject bannerObject = bannerArray
+                                    .optJSONObject(0);
+                            if (bannerObject.optInt("is_clip", -1) == -1) {
+                                HomeLiveCategoryLive live = new HomeLiveCategoryLive();
+                                live.parse(bannerObject);
+                                mCategoryRecommendBanner.setLive(live);
+                            } else {
+                                mCategoryRecommendBanner
+                                        .parse(bannerObject);
+                            }
+                            mCategoryRecommendAdapter
+                                    .setBanner(mCategoryRecommendBanner);
+                        }
+                        mCategoryRecommendAdapter.setRefreshing(false,
+                                true);
+                        return;
+                    }
+                }
+                mCategoryRecommendAdapter.setRefreshing(false, false);
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t) {
+                mCategoryRecommendAdapter.setRefreshing(false, false);
+            }
+        });
+    }
+
+    public void getCategoryRefresh(final String area, final int listPosition) {
+        String ts = "";
+        String sign = "";
+        if ("draw".equals(area)) {
+            ts = "1497601395";
+            sign = "c6745f5d696ae56b8f7ef34ad70bf0e6";
+        }
+        if ("ent-life".equals(area)) {
+            ts = "1497834030";
+            sign = "ee2cc1f66aa8542e143b78bbb1f4c4b7";
+        }
+        if ("sing-dance".equals(area)) {
+            ts = "1497834281";
+            sign = "c3efe076b074d3d6fc7cddb2a08568a8";
+        }
+        if ("mobile-game".equals(area)) {
+            ts = "1497834322";
+            sign = "a0bfc83eee1d0986739583a72c686651";
+        }
+        if ("single".equals(area)) {
+            ts = "1497834367";
+            sign = "47d03855e86bc5e74fcdff91d27a0af7";
+        }
+        if ("online".equals(area)) {
+            ts = "1497834906";
+            sign = "23ad7bb16722a25751865eeee3a64a12";
+        }
+        if ("e-sports".equals(area)) {
+            ts = "1497834932";
+            sign = "69667f6782a996511bbed21024bf9427";
+        }
+        if ("otaku".equals(area)) {
+            ts = "1497834969";
+            sign = "5dcce13365c4daf79f09d9b018554bdc";
+        }
+        if ("movie".equals(area)) {
+            ts = "1497834995";
+            sign = "db4d9d6cc62eb0d17502c140e8fc7ad2";
+        }
+
+        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getLiveCategoryRefresh("android", "1d8b6e7d45233436", area, "506000", "android", "android", ts, sign);
+        call.enqueue(new Callback<JSONObject>() {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
+                if (response.body().optInt("code", -1) == 0) {
+                    List<HomeLiveCategoryLive> lives = Json
+                            .parseJsonArray(HomeLiveCategoryLive.class,
+                                    response.body().optJSONArray("data"));
+                    for (HomeLiveCategory category : mCategories) {
+                        if (category.getPartition().getArea()
+                                .equals(area)) {
+                            category.getLives().clear();
+                            category.getLives().addAll(lives);
+                            Collections.shuffle(category.getLives());
+                            break;
+                        }
+                    }
+                    mCategoryAdapter.setRefreshing(area, listPosition,
+                            false, true);
+                    return;
+                }
+                mCategoryAdapter.setRefreshing(area, listPosition,
+                        false, false);
+            }
+
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t) {
+                mCategoryAdapter.setRefreshing(area, listPosition,
+                        false, false);
             }
         });
     }

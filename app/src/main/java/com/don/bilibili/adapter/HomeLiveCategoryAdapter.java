@@ -2,8 +2,10 @@ package com.don.bilibili.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.Html;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -15,21 +17,31 @@ import com.don.bilibili.Model.HomeLiveCategory;
 import com.don.bilibili.Model.HomeLiveCategoryLive;
 import com.don.bilibili.Model.HomeLiveCategoryLivePartition;
 import com.don.bilibili.R;
-import com.don.bilibili.adapter.base.BaseAdapter;
+import com.don.bilibili.fragment.home.LiveFragment;
 import com.don.bilibili.image.ImageManager;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class HomeLiveCategoryAdapter extends BaseAdapter<HomeLiveCategory> {
 
+public class HomeLiveCategoryAdapter extends
+        RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private Context mContext;
+    private LiveFragment mFragment;
+    private List<HomeLiveCategory> mCategories = new ArrayList<HomeLiveCategory>();
     private Map<String, Boolean> mIsRefreshings = new HashMap<String, Boolean>();
     private Map<String, Integer> mRefreshCounts = new HashMap<String, Integer>();
 
-    public HomeLiveCategoryAdapter(Context context, List<HomeLiveCategory> list) {
-        super(context, list);
+    public HomeLiveCategoryAdapter(Context context, LiveFragment fragment,
+                                   List<HomeLiveCategory> categories) {
+        super();
+        mContext = context;
+        mFragment = fragment;
+        mCategories = categories;
     }
 
     public void setRefreshing(String area, int listPosition,
@@ -73,7 +85,7 @@ public class HomeLiveCategoryAdapter extends BaseAdapter<HomeLiveCategory> {
 
     @Override
     public int getItemCount() {
-        return super.getItemCount() * 6;
+        return mCategories.size() == 0 ? 0 : (mCategories.size() * 6);
     }
 
     @Override
@@ -88,22 +100,24 @@ public class HomeLiveCategoryAdapter extends BaseAdapter<HomeLiveCategory> {
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int type) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int type) {
         View view = null;
-        RecyclerView.ViewHolder holder = null;
+        ViewHolder holder = null;
         switch (type) {
             case 0:
-                view = View.inflate(mContext,R.layout.listitem_home_live_head,null);
+                view = View.inflate(mContext, R.layout.listitem_home_live_head,
+                        null);
                 holder = new HeadViewHolder(view);
                 break;
 
             case 1:
-                view = View.inflate(mContext,R.layout.listitem_home_live_foot,null);
+                view = View.inflate(mContext, R.layout.listitem_home_live_foot,
+                        null);
                 holder = new FootViewHolder(view);
                 break;
 
             case 2:
-                view = View.inflate(mContext,R.layout.listitem_home_live,null);
+                view = View.inflate(mContext, R.layout.listitem_home_live, null);
                 holder = new ItemViewHolder(view);
                 break;
         }
@@ -111,9 +125,9 @@ public class HomeLiveCategoryAdapter extends BaseAdapter<HomeLiveCategory> {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         int p = position / 6;
-        HomeLiveCategory category = getAll().get(p);
+        HomeLiveCategory category = mCategories.get(p);
         HomeLiveCategoryLivePartition partition = category.getPartition();
         if (holder instanceof HeadViewHolder) {
             HeadViewHolder headViewHolder = (HeadViewHolder) holder;
@@ -156,7 +170,7 @@ public class HomeLiveCategoryAdapter extends BaseAdapter<HomeLiveCategory> {
         }
     }
 
-    class HeadViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class HeadViewHolder extends ViewHolder implements OnClickListener {
 
         ImageView mIvIcon;
         TextView mTvName;
@@ -176,7 +190,7 @@ public class HomeLiveCategoryAdapter extends BaseAdapter<HomeLiveCategory> {
         @Override
         public void onClick(View v) {
             int p = getAdapterPosition() / 6;
-            HomeLiveCategory category = getAll().get(p);
+            HomeLiveCategory category = mCategories.get(p);
             HomeLiveCategoryLivePartition partition = category.getPartition();
 //            Intent intent = new Intent(mContext, LiveAreaActivity.class);
 //            intent.putExtra("partition", partition);
@@ -184,7 +198,7 @@ public class HomeLiveCategoryAdapter extends BaseAdapter<HomeLiveCategory> {
         }
     }
 
-    class FootViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class FootViewHolder extends ViewHolder implements OnClickListener {
 
         TextView mTvMore;
         TextView mTvContent;
@@ -214,7 +228,7 @@ public class HomeLiveCategoryAdapter extends BaseAdapter<HomeLiveCategory> {
         @Override
         public void onClick(View v) {
             int p = getAdapterPosition() / 6;
-            HomeLiveCategory category = getAll().get(p);
+            HomeLiveCategory category = mCategories.get(p);
             HomeLiveCategoryLivePartition partition = category.getPartition();
             switch (v.getId()) {
                 case R.id.listitem_home_live_foot_tv_more:
@@ -225,18 +239,18 @@ public class HomeLiveCategoryAdapter extends BaseAdapter<HomeLiveCategory> {
 
                 case R.id.listitem_home_live_foot_tv_content:
                 case R.id.listitem_home_live_foot_layout_refresh:
-//                    boolean isRefreshing = getIsRefreshing(partition.getArea());
-//                    if (isRefreshing) {
-//                        return;
-//                    }
-//                    setRefreshing(partition.getArea(), p, true, false);
-//                    mFragment.getCategoryRefresh(partition.getArea(), p);
+                    boolean isRefreshing = getIsRefreshing(partition.getArea());
+                    if (isRefreshing) {
+                        return;
+                    }
+                    setRefreshing(partition.getArea(), p, true, false);
+                    mFragment.getCategoryRefresh(partition.getArea(), p);
                     break;
             }
         }
     }
 
-    class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class ItemViewHolder extends ViewHolder implements OnClickListener {
 
         ImageView mIvCover;
         TextView mTvTitle;
@@ -261,7 +275,7 @@ public class HomeLiveCategoryAdapter extends BaseAdapter<HomeLiveCategory> {
         @Override
         public void onClick(View v) {
             int p = getAdapterPosition() / 6;
-            HomeLiveCategory category = getAll().get(p);
+            HomeLiveCategory category = mCategories.get(p);
             HomeLiveCategoryLive live = category.getLives().get(
                     (getAdapterPosition() - 2 * p) % 5);
 //            Intent intent = new Intent(mContext, LiveActivity.class);
