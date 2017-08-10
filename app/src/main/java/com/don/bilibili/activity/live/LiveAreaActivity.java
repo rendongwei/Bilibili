@@ -30,8 +30,6 @@ import com.don.bilibili.view.DividerItemDecoration;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -273,12 +271,7 @@ public class LiveAreaActivity extends TranslucentStatusBarActivity implements Vi
         if (mIsLoading) {
             return;
         }
-        String tag = "";
-        try {
-            tag = EmptyUtil.isEmpty(mTag) ? "" : URLEncoder.encode(mTag, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        String tag = EmptyUtil.isEmpty(mTag) ? "" : mTag;
         Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getLiveArea("android", "TXkfLxcmRXdGfkgqVipLeU18SCocfz9MKF9uWD9DJR1oDHlIfkp6Q3NDekJ1Qw", "1d8b6e7d45233436", mPartition.getId(), "509001", "android", mPage, "android", "recommend", "bili", "20170712132700022", "1499837242", "5.9.1.509001", "728568d0225f65b4ff4fafcd78574634", tag);
         call.enqueue(new Callback<JSONObject>() {
             @Override
