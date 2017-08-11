@@ -29,4 +29,6 @@ public interface RetrofitApiService {
     @GET("mobile/rooms")
     Call<JSONObject> getLiveArea(@Query("_device") String device, @Query("_hwid") String hwid, @Query("appkey") String key, @Query("area_id") int areaId, @Query("build") String build, @Query("mobi_app") String mobi_app, @Query("page") int page, @Query("platform") String platform, @Query("sort") String sort, @Query("src") String src, @Query("trace_id") String trace_id, @Query("ts") String ts, @Query("version") String version, @Query("sign") String sign, @Query("tag") String tag);
 
+    @GET("AppRoom/index")
+    Call<JSONObject> getLiveInfo(@Query("_device") String device, @Query("appkey") String key, @Query("build") String build, @Query("buld") String buld,@Query("jumpFrom") String jumpFrom,@Query("mobi_app") String mobi_app, @Query("platform") String platform, @Query("room_id") int room_id, @Query("scale") String scale, @Query("ts") String ts,  @Query("sign") String sign);
 }

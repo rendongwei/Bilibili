@@ -32,11 +32,17 @@ import com.don.bilibili.R;
 import com.don.bilibili.activity.base.TranslucentStatusBarActivity;
 import com.don.bilibili.annotation.Id;
 import com.don.bilibili.annotation.OnClick;
+import com.don.bilibili.http.HttpManager;
+import com.don.bilibili.image.ImageManager;
 import com.don.bilibili.utils.DisplayUtil;
 import com.don.bilibili.utils.TimeUtil;
+import com.don.bilibili.utils.Util;
 import com.don.bilibili.view.CircularImageView;
 import com.don.bilibili.view.media.BDCloudVideoView;
 
+import org.json.JSONObject;
+
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +56,9 @@ import master.flame.danmaku.danmaku.model.android.DanmakuContext;
 import master.flame.danmaku.danmaku.model.android.Danmakus;
 import master.flame.danmaku.danmaku.parser.BaseDanmakuParser;
 import master.flame.danmaku.ui.widget.DanmakuView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LiveActivity extends TranslucentStatusBarActivity implements View.OnClickListener {
 
@@ -629,7 +638,72 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
     }
 
     public void getInfo() {
+        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getLiveInfo("android","1d8b6e7d45233436","506000","506000","24000","android","android",mLive.getRoomId(),"xxhdpi","1499216815","c17733d913d0a24036a950a68bb75d19");
+        call.enqueue(new Callback<JSONObject>() {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
+                if (response.body().optInt("code", -1) == 0) {
+                    JSONObject object = response.body().optJSONObject("data");
+                    if (object != null) {
+                        if ("ROUND".equals(object.optString("status"))) {
+                            mTvRound.setVisibility(View.VISIBLE);
+                            mIvWaterMark
+                                    .setImageResource(R.drawable.ic_watermark_round_small);
+                            getRoundInfo();
+                        } else {
+                            mIvWaterMark
+                                    .setImageResource(R.drawable.ic_watermark_live_small);
+                            mBdCloudVideoView.setVideoPath(mLive
+                                    .getUrl());
+                            mBdCloudVideoView.start();
+                        }
+                        ImageManager.getInstance(mContext).showHead(
+                                mIvHead, object.optString("face"));
+                        mTvTitleName.setText(object.optString("title"));
+                        mTvLevel.setText("UP"
+                                + object.optString("master_level"));
+                        int levelColor = object
+                                .optInt("master_level_color");
+                        mTvLevel.setTextColor(Util
+                                .parseColor(levelColor));
+                        mTvLevel.setBackgroundDrawable(Util
+                                .getRoundLine(mContext,
+                                        Util.parseColor(levelColor),
+                                        Color.WHITE));
+                        mTvName.setText(object.optString("uname"));
+                        int online = object.optInt("online");
+                        String count = "";
+                        DecimalFormat df = new DecimalFormat("0.##");
+                        if (online > 10000) {
+                            double d = (double) online / 10000d;
+                            count = df.format(d) + "万";
+                        } else {
+                            count = online + "";
+                        }
+                        mTvWatchCount.setText(count);
+                        count = "";
+                        int follow = object.optInt("attention");
+                        if (follow > 10000) {
+                            double d = (double) follow / 10000d;
+                            count = df.format(d) + "万";
+                        } else {
+                            count = follow + "";
+                        }
+                        mTvFollowCount.setText(count);
+                        boolean isFollow = object
+                                .optInt("is_attention") == 1;
+                        mTvFollow
+                                .setBackgroundResource(isFollow ? R.drawable.bg_pink
+                                        : R.drawable.bg_gray);
+                    }
+                }
+            }
 
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t) {
+
+            }
+        });
     }
 
     private void getRoundInfo() {
