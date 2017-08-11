@@ -1,6 +1,7 @@
 package com.don.bilibili.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.SpannableString;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.don.bilibili.Model.HomeLiveCategoryLive;
 import com.don.bilibili.R;
+import com.don.bilibili.activity.live.LiveActivity;
 import com.don.bilibili.image.ImageManager;
 import com.don.bilibili.utils.TextLinkUtil;
 import com.don.bilibili.view.ClickableMovementMethod;
@@ -129,10 +131,10 @@ public class LiveAllAdapter extends
 
 		@Override
 		public void onClick(View v) {
-//			HomeLiveCategoryLive live = mLives.get(getAdapterPosition());
-//			Intent intent = new Intent(mContext, LiveActivity.class);
-//			intent.putExtra("live", live);
-//			mContext.startActivity(intent);
+			HomeLiveCategoryLive live = mLives.get(getAdapterPosition());
+			Intent intent = new Intent(mContext, LiveActivity.class);
+			intent.putExtra("live", live);
+			mContext.startActivity(intent);
 		}
 	}
 }

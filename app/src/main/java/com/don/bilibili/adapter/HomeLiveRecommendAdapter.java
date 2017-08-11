@@ -23,6 +23,7 @@ import com.don.bilibili.Model.HomeLiveCategoryBanner;
 import com.don.bilibili.Model.HomeLiveCategoryLive;
 import com.don.bilibili.Model.HomeLiveCategoryLivePartition;
 import com.don.bilibili.R;
+import com.don.bilibili.activity.live.LiveActivity;
 import com.don.bilibili.activity.live.LiveAllActivity;
 import com.don.bilibili.fragment.home.LiveFragment;
 import com.don.bilibili.image.ImageManager;
@@ -310,17 +311,17 @@ public class HomeLiveRecommendAdapter extends
 
 		@Override
 		public void onClick(View v) {
-//			HomeLiveCategoryLive live = null;
-//			if (getAdapterPosition() < 7) {
-//				live = mRecommend.getLives().get(getAdapterPosition() - 1);
-//			} else if (getAdapterPosition() == 7) {
-//				live = mBanner.getLive();
-//			} else {
-//				live = mRecommend.getLives().get(getAdapterPosition() - 2);
-//			}
-//			Intent intent = new Intent(mContext, LiveActivity.class);
-//			intent.putExtra("live", live);
-//			mContext.startActivity(intent);
+			HomeLiveCategoryLive live = null;
+			if (getAdapterPosition() < 7) {
+				live = mRecommend.getLives().get(getAdapterPosition() - 1);
+			} else if (getAdapterPosition() == 7) {
+				live = mBanner.getLive();
+			} else {
+				live = mRecommend.getLives().get(getAdapterPosition() - 2);
+			}
+			Intent intent = new Intent(mContext, LiveActivity.class);
+			intent.putExtra("live", live);
+			mContext.startActivity(intent);
 		}
 	}
 

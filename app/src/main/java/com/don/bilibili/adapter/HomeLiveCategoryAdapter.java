@@ -18,6 +18,7 @@ import com.don.bilibili.Model.HomeLiveCategory;
 import com.don.bilibili.Model.HomeLiveCategoryLive;
 import com.don.bilibili.Model.HomeLiveCategoryLivePartition;
 import com.don.bilibili.R;
+import com.don.bilibili.activity.live.LiveActivity;
 import com.don.bilibili.activity.live.LiveAreaActivity;
 import com.don.bilibili.fragment.home.LiveFragment;
 import com.don.bilibili.image.ImageManager;
@@ -280,9 +281,9 @@ public class HomeLiveCategoryAdapter extends
             HomeLiveCategory category = mCategories.get(p);
             HomeLiveCategoryLive live = category.getLives().get(
                     (getAdapterPosition() - 2 * p) % 5);
-//            Intent intent = new Intent(mContext, LiveActivity.class);
-//            intent.putExtra("live", live);
-//            mContext.startActivity(intent);
+            Intent intent = new Intent(mContext, LiveActivity.class);
+            intent.putExtra("live", live);
+            mContext.startActivity(intent);
         }
     }
 }

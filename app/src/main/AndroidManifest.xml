@@ -26,6 +26,10 @@
         <activity android:name=".activity.HomeActivity" />
         <activity android:name=".activity.live.LiveAllActivity" />
         <activity android:name=".activity.live.LiveAreaActivity" />
+        <activity
+            android:name=".activity.live.LiveActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:windowSoftInputMode="adjustPan" />
     </application>
 
 </manifest>
