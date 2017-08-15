@@ -278,7 +278,7 @@ public class LiveFragment extends BindFragment implements View.OnClickListener {
     }
 
     private void getCommon() {
-        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getLiveCommon("android", "1d8b6e7d45233436", "506000", "android", "android", "xxhdpi", "1497417266", "78cb52d64155cc90ed303d2d3c8be9cb");
+        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getUrl("http://api.live.bilibili.com/AppNewIndex/common?_device=android&access_key=58da0ccf15c44446a027990e5b90eab6&appkey=1d8b6e7d45233436&build=506000&mobi_app=android&platform=android&scale=xxhdpi&ts=1497417266&sign=78cb52d64155cc90ed303d2d3c8be9cb");
         call.enqueue(new Callback<JSONObject>() {
             @Override
             public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
@@ -304,7 +304,7 @@ public class LiveFragment extends BindFragment implements View.OnClickListener {
     }
 
     private void getRecommend() {
-        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getLiveRecommend("android", "58da0ccf15c44446a027990e5b90eab6", "1d8b6e7d45233436", "506000", "android", "android", "xxhdpi", "1497418171", "f079efd3c40deab99f7cf65de485ce82");
+        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getUrl("http://api.live.bilibili.com/AppNewIndex/recommend?_device=android&access_key=58da0ccf15c44446a027990e5b90eab6&appkey=1d8b6e7d45233436&build=506000&mobi_app=android&platform=android&scale=xxhdpi&ts=1497418171&sign=f079efd3c40deab99f7cf65de485ce82");
         call.enqueue(new Callback<JSONObject>() {
             @Override
             public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
@@ -347,7 +347,7 @@ public class LiveFragment extends BindFragment implements View.OnClickListener {
     }
 
     public void getRecommendRefresh() {
-        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getLiveRecommendRefresh("android", "1d8b6e7d45233436", "506000", "android", "android", "xxhdpi", "1497574830", "8789ca8936efd1f21d3d4cd8c303b9f3");
+        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getUrl("http://api.live.bilibili.com/AppIndex/recommendRefresh?_device=android&appkey=1d8b6e7d45233436&build=506000&mobi_app=android&platform=android&scale=xxhdpi&ts=1497574830&sign=8789ca8936efd1f21d3d4cd8c303b9f3");
         call.enqueue(new Callback<JSONObject>() {
             @Override
             public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
