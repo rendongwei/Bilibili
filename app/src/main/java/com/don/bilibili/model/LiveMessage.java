@@ -1,4 +1,4 @@
-package com.don.bilibili.Model;
+package com.don.bilibili.model;
 
 import com.don.bilibili.Json.Json;
 import com.don.bilibili.Json.annotation.Name;

@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.don.bilibili.Model.HomeLiveBanner;
+import com.don.bilibili.model.HomeLiveBanner;
 import com.don.bilibili.R;
 import com.don.bilibili.image.ImageManager;
 

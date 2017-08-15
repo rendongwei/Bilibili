@@ -29,8 +29,8 @@ import android.widget.TextView;
 
 import com.baidu.cloud.media.player.IMediaPlayer;
 import com.don.bilibili.Json.Json;
-import com.don.bilibili.Model.HomeLiveCategoryLive;
-import com.don.bilibili.Model.LiveMessage;
+import com.don.bilibili.model.HomeLiveCategoryLive;
+import com.don.bilibili.model.LiveMessage;
 import com.don.bilibili.R;
 import com.don.bilibili.activity.base.TranslucentStatusBarActivity;
 import com.don.bilibili.adapter.TabAdapter;

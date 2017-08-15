@@ -1,4 +1,4 @@
-package com.don.bilibili.Model;
+package com.don.bilibili.model;
 
 
 

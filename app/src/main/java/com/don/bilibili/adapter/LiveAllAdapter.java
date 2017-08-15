@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.don.bilibili.Model.HomeLiveCategoryLive;
+import com.don.bilibili.model.HomeLiveCategoryLive;
 import com.don.bilibili.R;
 import com.don.bilibili.activity.live.LiveActivity;
 import com.don.bilibili.image.ImageManager;

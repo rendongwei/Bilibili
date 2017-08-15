@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.don.bilibili.Json.Json;
-import com.don.bilibili.Model.HomeLiveCategoryLive;
+import com.don.bilibili.model.HomeLiveCategoryLive;
 import com.don.bilibili.R;
 import com.don.bilibili.adapter.LiveAllAdapter;
 import com.don.bilibili.annotation.Id;

@@ -12,10 +12,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.don.bilibili.Json.Json;
-import com.don.bilibili.Model.HomeLiveBanner;
-import com.don.bilibili.Model.HomeLiveCategory;
-import com.don.bilibili.Model.HomeLiveCategoryBanner;
-import com.don.bilibili.Model.HomeLiveCategoryLive;
+import com.don.bilibili.model.HomeLiveBanner;
+import com.don.bilibili.model.HomeLiveCategory;
+import com.don.bilibili.model.HomeLiveCategoryBanner;
+import com.don.bilibili.model.HomeLiveCategoryLive;
 import com.don.bilibili.R;
 import com.don.bilibili.adapter.HomeLiveCategoryAdapter;
 import com.don.bilibili.adapter.HomeLiveRecommendAdapter;

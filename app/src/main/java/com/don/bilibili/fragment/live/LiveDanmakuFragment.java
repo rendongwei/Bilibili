@@ -7,8 +7,8 @@ import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
-import com.don.bilibili.Model.LiveMessage;
-import com.don.bilibili.Model.LiveTitle;
+import com.don.bilibili.model.LiveMessage;
+import com.don.bilibili.model.LiveTitle;
 import com.don.bilibili.R;
 import com.don.bilibili.adapter.LiveDanmakuAdapter;
 import com.don.bilibili.annotation.Id;

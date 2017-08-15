@@ -15,8 +15,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.don.bilibili.Model.LiveMessage;
-import com.don.bilibili.Model.LiveTitle;
+import com.don.bilibili.model.LiveMessage;
+import com.don.bilibili.model.LiveTitle;
 import com.don.bilibili.R;
 import com.don.bilibili.utils.DisplayUtil;
 import com.don.bilibili.utils.EmptyUtil;

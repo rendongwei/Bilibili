@@ -12,8 +12,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.don.bilibili.Json.Json;
-import com.don.bilibili.Model.HomeLiveCategoryLive;
-import com.don.bilibili.Model.HomeLiveCategoryLivePartition;
+import com.don.bilibili.model.HomeLiveCategoryLive;
+import com.don.bilibili.model.HomeLiveCategoryLivePartition;
 import com.don.bilibili.R;
 import com.don.bilibili.activity.base.TranslucentStatusBarActivity;
 import com.don.bilibili.adapter.LiveAreaAdapter;
