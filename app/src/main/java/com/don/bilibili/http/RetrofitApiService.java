@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
+import retrofit2.http.Url;
 
 public interface RetrofitApiService {
 
@@ -38,4 +39,9 @@ public interface RetrofitApiService {
     @GET("appUser/getTitle")
     Call<JSONObject> getLiveMessageTitle(@Query("_device") String device, @Query("appkey") String key, @Query("build") String build, @Query("mobi_app") String mobi_app, @Query("platform") String platform, @Query("scale") String scale, @Query("ts") String ts, @Query("sign") String sign);
 
+    @GET("live/getRoundPlayVideo")
+    Call<JSONObject> getLiveRoundInfo(@Query("_device") String device, @Query("_hwid") String hwid, @Query("appkey") String key,  @Query("build") String build, @Query("mobi_app") String mobi_app, @Query("platform") String platform, @Query("room_id") int room_id, @Query("src") String src, @Query("trace_id") String trace_id, @Query("ts") String ts, @Query("version") String version, @Query("sign") String sign);
+
+    @GET
+    Call<JSONObject> getLiveRoundPlayUrl(@Url String url);
 }

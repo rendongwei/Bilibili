@@ -40,12 +40,14 @@ import com.don.bilibili.fragment.live.LiveDanmakuFragment;
 import com.don.bilibili.http.HttpManager;
 import com.don.bilibili.image.ImageManager;
 import com.don.bilibili.utils.DisplayUtil;
+import com.don.bilibili.utils.EmptyUtil;
 import com.don.bilibili.utils.EncryptUtil;
 import com.don.bilibili.utils.TimeUtil;
 import com.don.bilibili.utils.Util;
 import com.don.bilibili.view.CircularImageView;
 import com.don.bilibili.view.media.BDCloudVideoView;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
@@ -190,7 +192,7 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
         }
         unregisterReceiver(receiver);
         mHandler.removeMessages(1);
-        if (mMessageCall!= null && !mMessageCall.isCanceled()){
+        if (mMessageCall != null) {
             mMessageCall.cancel();
         }
     }
@@ -718,16 +720,52 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
     }
 
     private void getRoundInfo() {
+        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getLiveRoundInfo("android", "TXkfLxcmRXdGfkgqVipLeU18SCocfz9MKF9uWD9DJR1oDHlIfkp6Q3NDekJ1Qw", "1d8b6e7d45233436", "509000", "android", "android", mLive.getRoomId(), "bili", "20170711151600003", "1499757363", "5.9.0.509000", "d5c5e039e09dd7e279260259bbfbfa2a");
+        call.enqueue(new Callback<JSONObject>() {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
+                if (response.body().optInt("code", -1) == 0) {
+                    JSONObject object = response.body().optJSONObject("data");
+                    if (object != null) {
+                        String url = object.optString("play_url");
+                        if (!EmptyUtil.isEmpty(url)) {
+                            getRoundPlayUrl(url);
+                        }
+                    }
+                }
+            }
 
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t) {
+
+            }
+        });
     }
 
     private void getRoundPlayUrl(String url) {
+        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getLiveRoundPlayUrl(url);
+        call.enqueue(new Callback<JSONObject>() {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
+                JSONArray array = response.body().optJSONArray("durl");
+                if (array != null) {
+                    String s = array.optJSONObject(0).optString("url");
+                    if (!EmptyUtil.isEmpty(s)) {
+                        mBdCloudVideoView.setVideoPath(s);
+                        mBdCloudVideoView.start();
+                    }
+                }
+            }
 
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t) {
+
+            }
+        });
     }
 
     private void getMessage() {
-        mMessageCall = HttpManager.getInstance().getApiSevice().getLiveMessage("android", "1d8b6e7d45233436", "506000", "android", "android", mLive.getRoomId(), "1499146112", "b5ff78c13763f307d7fbd3cb7b7b5467");
-        mMessageCall.enqueue(new Callback<JSONObject>() {
+        Callback<JSONObject> callback = new Callback<JSONObject>() {
             @Override
             public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
                 if (response.body().optInt("code", -1) == 0) {
@@ -757,6 +795,13 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
             public void onFailure(Call<JSONObject> call, Throwable t) {
                 mHandler.sendEmptyMessageDelayed(1, 300);
             }
-        });
+        };
+        if (mMessageCall == null) {
+            mMessageCall = HttpManager.getInstance().getApiSevice().getLiveMessage("android", "1d8b6e7d45233436", "506000", "android", "android", mLive.getRoomId(), "1499146112", "b5ff78c13763f307d7fbd3cb7b7b5467");
+        } else {
+            mMessageCall.cancel();
+            mMessageCall = mMessageCall.clone();
+        }
+        mMessageCall.enqueue(callback);
     }
 }
