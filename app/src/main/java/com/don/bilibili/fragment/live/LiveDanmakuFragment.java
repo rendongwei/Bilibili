@@ -14,11 +14,19 @@ import com.don.bilibili.adapter.LiveDanmakuAdapter;
 import com.don.bilibili.annotation.Id;
 import com.don.bilibili.annotation.OnClick;
 import com.don.bilibili.fragment.base.BindFragment;
+import com.don.bilibili.http.HttpManager;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LiveDanmakuFragment extends BindFragment implements
 		OnClickListener {
@@ -86,27 +94,26 @@ public class LiveDanmakuFragment extends BindFragment implements
 	}
 
 	private void getLiveTitle() {
-//		RequestManager.getInstance(mContext).getLiveTitle(
-//				new RequestCallBack<JSONObject>() {
-//
-//					@Override
-//					public void onResult(JSONObject response) {
-//						if (response.optInt("code", -1) == 0) {
-//							JSONArray array = response.optJSONArray("data");
-//							if (array != null) {
-//								for (int i = 0; i < array.length(); i++) {
-//									LiveTitle title = new LiveTitle();
-//									title.parse(array.optJSONObject(i));
-//									mTitles.put(title.getId(), title);
-//								}
-//							}
-//						}
-//					}
-//
-//					@Override
-//					public void onError(RequestError error, int statusCode) {
-//
-//					}
-//				});
+		Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getLiveMessageTitle("android", "1d8b6e7d45233436", "506000", "android", "android", "xxhdpi", "1499216815", "1c68ab0a9e79b4af5aaf582917fbcdea");
+		call.enqueue(new Callback<JSONObject>() {
+			@Override
+			public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
+				if (response.body().optInt("code", -1) == 0) {
+					JSONArray array = response.body().optJSONArray("data");
+					if (array != null) {
+						for (int i = 0; i < array.length(); i++) {
+							LiveTitle title = new LiveTitle();
+							title.parse(array.optJSONObject(i));
+							mTitles.put(title.getId(), title);
+						}
+					}
+				}
+			}
+
+			@Override
+			public void onFailure(Call<JSONObject> call, Throwable t) {
+
+			}
+		});
 	}
 }

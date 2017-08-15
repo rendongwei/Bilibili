@@ -34,4 +34,8 @@ public interface RetrofitApiService {
 
     @GET("AppRoom/msg")
     Call<JSONObject> getLiveMessage(@Query("_device") String device, @Query("appkey") String key, @Query("build") String build, @Query("mobi_app") String mobi_app, @Query("platform") String platform, @Query("room_id") int room_id, @Query("ts") String ts, @Query("sign") String sign);
+
+    @GET("appUser/getTitle")
+    Call<JSONObject> getLiveMessageTitle(@Query("_device") String device, @Query("appkey") String key, @Query("build") String build, @Query("mobi_app") String mobi_app, @Query("platform") String platform, @Query("scale") String scale, @Query("ts") String ts, @Query("sign") String sign);
+
 }

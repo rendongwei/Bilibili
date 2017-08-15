@@ -190,7 +190,9 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
         }
         unregisterReceiver(receiver);
         mHandler.removeMessages(1);
-//        RequestManager.getInstance(mContext).cancelLiveMessage();
+        if (mMessageCall!= null && !mMessageCall.isCanceled()){
+            mMessageCall.cancel();
+        }
     }
 
 
