@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -32,8 +33,10 @@ import com.don.bilibili.Model.HomeLiveCategoryLive;
 import com.don.bilibili.Model.LiveMessage;
 import com.don.bilibili.R;
 import com.don.bilibili.activity.base.TranslucentStatusBarActivity;
+import com.don.bilibili.adapter.TabAdapter;
 import com.don.bilibili.annotation.Id;
 import com.don.bilibili.annotation.OnClick;
+import com.don.bilibili.fragment.live.LiveDanmakuFragment;
 import com.don.bilibili.http.HttpManager;
 import com.don.bilibili.image.ImageManager;
 import com.don.bilibili.utils.DisplayUtil;
@@ -129,7 +132,7 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
     private boolean mIsFullScreen = false;
     private boolean mAnimation = false;
 
-//    private LiveDanmakuFragment mDanmakuFragment;
+    private LiveDanmakuFragment mDanmakuFragment;
 //    private LiveRankFragment mRankFragment;
 //    private LiveGuardRankFragment mGuardRankFragment;
 
@@ -309,17 +312,17 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
         mTvTitle.setText(mLive.getOwner().getName() + "的直播间");
         mHandler.sendEmptyMessageDelayed(0, 3000);
 
-//        List<Fragment> mFragments = new ArrayList<Fragment>();
-//        mDanmakuFragment = new LiveDanmakuFragment();
+        List<Fragment> mFragments = new ArrayList<Fragment>();
+        mDanmakuFragment = new LiveDanmakuFragment();
 //        mRankFragment = new LiveRankFragment();
 //        mGuardRankFragment = new LiveGuardRankFragment(mLive.getOwner()
 //                .getMid());
-//        mFragments.add(mDanmakuFragment);
+        mFragments.add(mDanmakuFragment);
 //        mFragments.add(mRankFragment);
 //        mFragments.add(mGuardRankFragment);
-//        mVpDisplay.setAdapter(new LiveTabAdapter(getSupportFragmentManager(),
-//                mFragments));
-//        mLayoutTab.setupWithViewPager(mVpDisplay);
+        mVpDisplay.setAdapter(new TabAdapter(getSupportFragmentManager(),
+                mFragments, "互动", "排行榜", "舰队"));
+        mLayoutTab.setupWithViewPager(mVpDisplay);
 
         getInfo();
         getMessage();
@@ -741,7 +744,7 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
                             }
                             mLiveMessageFilter.add(filter);
                             addDanmaku(message.getMessage());
-//                            mDanmakuFragment.add(message);
+                            mDanmakuFragment.add(message);
                         }
                     }
                 }
