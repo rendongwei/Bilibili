@@ -27,7 +27,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.baidu.cloud.media.player.IMediaPlayer;
+import com.don.bilibili.Json.Json;
 import com.don.bilibili.Model.HomeLiveCategoryLive;
+import com.don.bilibili.Model.LiveMessage;
 import com.don.bilibili.R;
 import com.don.bilibili.activity.base.TranslucentStatusBarActivity;
 import com.don.bilibili.annotation.Id;
@@ -35,6 +37,7 @@ import com.don.bilibili.annotation.OnClick;
 import com.don.bilibili.http.HttpManager;
 import com.don.bilibili.image.ImageManager;
 import com.don.bilibili.utils.DisplayUtil;
+import com.don.bilibili.utils.EncryptUtil;
 import com.don.bilibili.utils.TimeUtil;
 import com.don.bilibili.utils.Util;
 import com.don.bilibili.view.CircularImageView;
@@ -131,6 +134,8 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
 //    private LiveGuardRankFragment mGuardRankFragment;
 
     private List<String> mLiveMessageFilter = new ArrayList<String>();
+
+    private Call<JSONObject> mMessageCall;
 
     @Override
     public void onBackPressed() {
@@ -384,6 +389,7 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
                 break;
         }
     }
+
     private BroadcastReceiver receiver = new BroadcastReceiver() {
 
         @Override
@@ -638,7 +644,7 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
     }
 
     public void getInfo() {
-        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getLiveInfo("android","1d8b6e7d45233436","506000","506000","24000","android","android",mLive.getRoomId(),"xxhdpi","1499216815","c17733d913d0a24036a950a68bb75d19");
+        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getLiveInfo("android", "1d8b6e7d45233436", "506000", "506000", "24000", "android", "android", mLive.getRoomId(), "xxhdpi", "1499216815", "c17733d913d0a24036a950a68bb75d19");
         call.enqueue(new Callback<JSONObject>() {
             @Override
             public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
@@ -715,6 +721,37 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
     }
 
     private void getMessage() {
+        mMessageCall = HttpManager.getInstance().getApiSevice().getLiveMessage("android", "1d8b6e7d45233436", "506000", "android", "android", mLive.getRoomId(), "1499146112", "b5ff78c13763f307d7fbd3cb7b7b5467");
+        mMessageCall.enqueue(new Callback<JSONObject>() {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
+                if (response.body().optInt("code", -1) == 0) {
+                    JSONObject object = response.body().optJSONObject("data");
+                    if (object != null) {
+                        List<LiveMessage> messages = Json
+                                .parseJsonArray(LiveMessage.class,
+                                        object.optJSONArray("room"));
+                        for (LiveMessage message : messages) {
+                            String content = message.getUid() + "/"
+                                    + message.getMessage() + "/"
+                                    + message.getTime();
+                            String filter = EncryptUtil.getMD5(content);
+                            if (mLiveMessageFilter.contains(filter)) {
+                                continue;
+                            }
+                            mLiveMessageFilter.add(filter);
+                            addDanmaku(message.getMessage());
+//                            mDanmakuFragment.add(message);
+                        }
+                    }
+                }
+                mHandler.sendEmptyMessageDelayed(1, 300);
+            }
 
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t) {
+                mHandler.sendEmptyMessageDelayed(1, 300);
+            }
+        });
     }
 }
