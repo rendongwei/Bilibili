@@ -29,16 +29,17 @@ import android.widget.TextView;
 
 import com.baidu.cloud.media.player.IMediaPlayer;
 import com.don.bilibili.Json.Json;
-import com.don.bilibili.model.HomeLiveCategoryLive;
-import com.don.bilibili.model.LiveMessage;
 import com.don.bilibili.R;
 import com.don.bilibili.activity.base.TranslucentStatusBarActivity;
 import com.don.bilibili.adapter.TabAdapter;
 import com.don.bilibili.annotation.Id;
 import com.don.bilibili.annotation.OnClick;
 import com.don.bilibili.fragment.live.LiveDanmakuFragment;
+import com.don.bilibili.fragment.live.LiveRankFragment;
 import com.don.bilibili.http.HttpManager;
 import com.don.bilibili.image.ImageManager;
+import com.don.bilibili.model.HomeLiveCategoryLive;
+import com.don.bilibili.model.LiveMessage;
 import com.don.bilibili.utils.DisplayUtil;
 import com.don.bilibili.utils.EmptyUtil;
 import com.don.bilibili.utils.EncryptUtil;
@@ -135,7 +136,7 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
     private boolean mAnimation = false;
 
     private LiveDanmakuFragment mDanmakuFragment;
-//    private LiveRankFragment mRankFragment;
+    private LiveRankFragment mRankFragment;
 //    private LiveGuardRankFragment mGuardRankFragment;
 
     private List<String> mLiveMessageFilter = new ArrayList<String>();
@@ -318,11 +319,11 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
 
         List<Fragment> mFragments = new ArrayList<Fragment>();
         mDanmakuFragment = new LiveDanmakuFragment();
-//        mRankFragment = new LiveRankFragment();
+        mRankFragment = new LiveRankFragment();
 //        mGuardRankFragment = new LiveGuardRankFragment(mLive.getOwner()
 //                .getMid());
         mFragments.add(mDanmakuFragment);
-//        mFragments.add(mRankFragment);
+        mFragments.add(mRankFragment);
 //        mFragments.add(mGuardRankFragment);
         mVpDisplay.setAdapter(new TabAdapter(getSupportFragmentManager(),
                 mFragments, "互动", "排行榜", "舰队"));

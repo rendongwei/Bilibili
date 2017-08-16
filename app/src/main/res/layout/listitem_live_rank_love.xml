@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingBottom="4dip"
+    android:paddingLeft="20dip"
+    android:paddingRight="20dip"
+    android:paddingTop="4dip" >
+
+    <ImageView
+        android:id="@+id/listitem_live_rank_love_iv_rank"
+        android:layout_width="20dip"
+        android:layout_height="20dip" />
+
+    <TextView
+        android:id="@+id/listitem_live_rank_love_tv_name"
+        android:layout_width="0dip"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dip"
+        android:layout_marginRight="8dip"
+        android:layout_weight="1"
+        android:textColor="@color/black"
+        android:textSize="12dip" />
+
+    <ImageView
+        android:layout_width="15dip"
+        android:layout_height="15dip"
+        android:src="@drawable/ic_rank_favorite" />
+
+    <TextView
+        android:id="@+id/listitem_live_rank_love_tv_count"
+        android:layout_width="50dip"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dip"
+        android:textColor="@color/black"
+        android:textSize="12dip" />
+
+</LinearLayout>
