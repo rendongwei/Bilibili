@@ -5,18 +5,29 @@ import java.util.List;
 import java.util.Map;
 
 public class DataManager {
-	private static volatile DataManager mManager;
+    private static volatile DataManager mManager;
+    private CacheManager mCacheManager;
 
-	public Map<String, List<String>> mLiveAreaTag = new HashMap<String, List<String>>();
+    private DataManager() {
+        mCacheManager = CacheManager.getInstance();
+    }
 
-	private DataManager() {
-	}
+    public static synchronized DataManager getInstance() {
+        if (mManager == null) {
+            mManager = new DataManager();
+        }
+        return mManager;
+    }
 
-	public static synchronized DataManager getInstance() {
-		if (mManager == null) {
-			mManager = new DataManager();
-		}
-		return mManager;
-	}
+    public Map<String, List<String>> getLiveAreaTagCache() {
+        Map<String, List<String>> cache = mCacheManager.getLiveAreaTagCache();
+        if (cache == null) {
+            cache = new HashMap<>();
+        }
+        return cache;
+    }
 
+    public void setLiveAreaTagCache(Map<String, List<String>> cache) {
+        mCacheManager.setLiveAreaTagCache(cache);
+    }
 }

@@ -31,8 +31,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -213,7 +215,8 @@ public class LiveAreaActivity extends TranslucentStatusBarActivity implements Vi
     }
 
     private void getTag() {
-        if (EmptyUtil.isEmpty(DataManager.getInstance().mLiveAreaTag)) {
+        Map<String, List<String>> cache = DataManager.getInstance().getLiveAreaTagCache();
+        if (EmptyUtil.isEmpty(cache)) {
             Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getLiveTag("android", "TXkfLxcmRXdGfkgqVipLeU18SCocfz9MKF9uWD9DJR1oDHlIfkp6Q3NDekJ1Qw", "1d8b6e7d45233436", "509001", "android", "android", "bili", "20170712132700022", "1499837242", "5.9.1.509001", "88e089e2d99b1f3c9d023e300ffbcd8e");
             call.enqueue(new Callback<JSONObject>() {
                 @Override
@@ -222,6 +225,7 @@ public class LiveAreaActivity extends TranslucentStatusBarActivity implements Vi
                         JSONObject object = response.body()
                                 .optJSONObject("data");
                         if (object != null) {
+                            Map<String, List<String>> cache = new HashMap<String, List<String>>();
                             Iterator<String> iterator = object.keys();
                             while (iterator.hasNext()) {
                                 String key = iterator.next();
@@ -231,16 +235,15 @@ public class LiveAreaActivity extends TranslucentStatusBarActivity implements Vi
                                 for (int i = 0; i < array.length(); i++) {
                                     value.add(array.optString(i));
                                 }
-                                DataManager.getInstance().mLiveAreaTag
-                                        .put(key, value);
+                                cache.put(key, value);
                             }
+                            DataManager.getInstance().setLiveAreaTagCache(cache);
                         }
                     }
-                    if (DataManager.getInstance().mLiveAreaTag
-                            .containsKey(mPartition.getId() + "")) {
+                    Map<String, List<String>> cache = DataManager.getInstance().getLiveAreaTagCache();
+                    if (cache.containsKey(mPartition.getId() + "")) {
                         mLayoutTag.setVisibility(View.VISIBLE);
-                        List<String> tags = new ArrayList<String>(DataManager.getInstance().mLiveAreaTag
-                                .get(mPartition.getId() + ""));
+                        List<String> tags = new ArrayList<String>(cache.get(mPartition.getId() + ""));
                         tags.add(0, "全部");
                         mLvTag.setAdapter(new LiveAreaTagAdapter(
                                 mContext, tags, true, mTag));
@@ -252,10 +255,10 @@ public class LiveAreaActivity extends TranslucentStatusBarActivity implements Vi
                 }
             });
         } else {
-            if (DataManager.getInstance().mLiveAreaTag.containsKey(mPartition
+            if (cache.containsKey(mPartition
                     .getId() + "")) {
                 mLayoutTag.setVisibility(View.VISIBLE);
-                List<String> tags = new ArrayList<String>(DataManager.getInstance().mLiveAreaTag
+                List<String> tags = new ArrayList<String>(cache
                         .get(mPartition.getId() + ""));
                 tags.add(0, "全部");
                 mLvTag.setAdapter(new LiveAreaTagAdapter(mContext, tags, true,
