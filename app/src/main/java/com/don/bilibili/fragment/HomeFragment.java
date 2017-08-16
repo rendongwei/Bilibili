@@ -15,6 +15,7 @@ import com.don.bilibili.annotation.Id;
 import com.don.bilibili.annotation.OnClick;
 import com.don.bilibili.fragment.base.BindFragment;
 import com.don.bilibili.fragment.home.LiveFragment;
+import com.don.bilibili.fragment.home.RecommendFragment;
 import com.don.bilibili.utils.DisplayUtil;
 
 import java.lang.reflect.Field;
@@ -60,6 +61,7 @@ public class HomeFragment extends BindFragment implements View.OnClickListener {
     private ImageView mIvRecommendHeadAttention;
 
     private LiveFragment mLiveFragment;
+    private RecommendFragment mRecommendFragment;
 
     @Override
     protected int getContentView() {
@@ -90,12 +92,13 @@ public class HomeFragment extends BindFragment implements View.OnClickListener {
     protected void init() {
         List<Fragment> mFragments = new ArrayList<Fragment>();
         mLiveFragment = new LiveFragment();
+        mRecommendFragment = new RecommendFragment();
         mFragments.add(mLiveFragment);
-//        mVpDisplay.setOffscreenPageLimit(6);
+        mFragments.add(mRecommendFragment);
         mVpDisplay.setAdapter(new TabAdapter(getChildFragmentManager(),
                 mFragments,"直播", "推荐", "追番", "分区", "动态", "发现"));
         mLayoutTab.setupWithViewPager(mVpDisplay);
-//        mVpDisplay.setCurrentItem(1);
+        mVpDisplay.setCurrentItem(1);
     }
 
     @Override
