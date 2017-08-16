@@ -12,8 +12,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.don.bilibili.Json.Json;
-import com.don.bilibili.model.HomeLiveCategoryLive;
-import com.don.bilibili.model.HomeLiveCategoryLivePartition;
 import com.don.bilibili.R;
 import com.don.bilibili.activity.base.TranslucentStatusBarActivity;
 import com.don.bilibili.adapter.LiveAreaAdapter;
@@ -22,6 +20,8 @@ import com.don.bilibili.annotation.Id;
 import com.don.bilibili.annotation.OnClick;
 import com.don.bilibili.cache.DataManager;
 import com.don.bilibili.http.HttpManager;
+import com.don.bilibili.model.HomeLiveCategoryLive;
+import com.don.bilibili.model.HomeLiveCategoryLivePartition;
 import com.don.bilibili.utils.DisplayUtil;
 import com.don.bilibili.utils.EmptyUtil;
 import com.don.bilibili.utils.Util;
@@ -30,6 +30,8 @@ import com.don.bilibili.view.DividerItemDecoration;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -217,7 +219,7 @@ public class LiveAreaActivity extends TranslucentStatusBarActivity implements Vi
     private void getTag() {
         Map<String, List<String>> cache = DataManager.getInstance().getLiveAreaTagCache();
         if (EmptyUtil.isEmpty(cache)) {
-            Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getLiveTag("android", "TXkfLxcmRXdGfkgqVipLeU18SCocfz9MKF9uWD9DJR1oDHlIfkp6Q3NDekJ1Qw", "1d8b6e7d45233436", "509001", "android", "android", "bili", "20170712132700022", "1499837242", "5.9.1.509001", "88e089e2d99b1f3c9d023e300ffbcd8e");
+            Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getUrl("http://api.live.bilibili.com/AppIndex/tags?_device=android&_hwid=TXkfLxcmRXdGfkgqVipLeU18SCocfz9MKF9uWD9DJR1oDHlIfkp6Q3NDekJ1Qw&appkey=1d8b6e7d45233436&build=509001&mobi_app=android&platform=android&src=bili&trace_id=20170712132700022&ts=1499837242&version=5.9.1.509001&sign=88e089e2d99b1f3c9d023e300ffbcd8e");
             call.enqueue(new Callback<JSONObject>() {
                 @Override
                 public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
@@ -274,8 +276,21 @@ public class LiveAreaActivity extends TranslucentStatusBarActivity implements Vi
         if (mIsLoading) {
             return;
         }
-        String tag = EmptyUtil.isEmpty(mTag) ? "" : mTag;
-        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getLiveArea("android", "TXkfLxcmRXdGfkgqVipLeU18SCocfz9MKF9uWD9DJR1oDHlIfkp6Q3NDekJ1Qw", "1d8b6e7d45233436", mPartition.getId(), "509001", "android", mPage, "android", "recommend", "bili", "20170712132700022", "1499837242", "5.9.1.509001", "728568d0225f65b4ff4fafcd78574634", tag);
+        String url = "http://api.live.bilibili.com/mobile/rooms?_device=android&_hwid=TXkfLxcmRXdGfkgqVipLeU18SCocfz9MKF9uWD9DJR1oDHlIfkp6Q3NDekJ1Qw&appkey=1d8b6e7d45233436&area_id="
+                + mPartition.getId()
+                + "&build=509001&mobi_app=android&page="
+                + mPage
+                + "&platform=android&sort="
+                + "recommend"
+                + "&src=bili&trace_id=20170712132700022&ts=1499837242&version=5.9.1.509001&sign=728568d0225f65b4ff4fafcd78574634";
+        if (!EmptyUtil.isEmpty(mTag)) {
+            try {
+                url += "&tag=" + URLEncoder.encode(mTag, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getUrl(url);
         call.enqueue(new Callback<JSONObject>() {
             @Override
             public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {

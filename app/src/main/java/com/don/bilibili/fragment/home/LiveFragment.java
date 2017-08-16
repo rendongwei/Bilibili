@@ -394,46 +394,23 @@ public class LiveFragment extends BindFragment implements View.OnClickListener {
     }
 
     public void getCategoryRefresh(final String area, final int listPosition) {
-        String ts = "";
-        String sign = "";
-        if ("draw".equals(area)) {
-            ts = "1497601395";
-            sign = "c6745f5d696ae56b8f7ef34ad70bf0e6";
+        String[] urls = new String[] {
+                "http://api.live.bilibili.com/AppIndex/dynamic?_device=android&appkey=1d8b6e7d45233436&area=draw&build=506000&mobi_app=android&platform=android&ts=1497601395&sign=c6745f5d696ae56b8f7ef34ad70bf0e6",
+                "http://api.live.bilibili.com/AppIndex/dynamic?_device=android&appkey=1d8b6e7d45233436&area=ent-life&build=506000&mobi_app=android&platform=android&ts=1497834030&sign=ee2cc1f66aa8542e143b78bbb1f4c4b7",
+                "http://api.live.bilibili.com/AppIndex/dynamic?_device=android&appkey=1d8b6e7d45233436&area=sing-dance&build=506000&mobi_app=android&platform=android&ts=1497834281&sign=c3efe076b074d3d6fc7cddb2a08568a8",
+                "http://api.live.bilibili.com/AppIndex/dynamic?_device=android&appkey=1d8b6e7d45233436&area=mobile-game&build=506000&mobi_app=android&platform=android&ts=1497834322&sign=a0bfc83eee1d0986739583a72c686651",
+                "http://api.live.bilibili.com/AppIndex/dynamic?_device=android&appkey=1d8b6e7d45233436&area=single&build=506000&mobi_app=android&platform=android&ts=1497834367&sign=47d03855e86bc5e74fcdff91d27a0af7",
+                "http://api.live.bilibili.com/AppIndex/dynamic?_device=android&appkey=1d8b6e7d45233436&area=online&build=506000&mobi_app=android&platform=android&ts=1497834906&sign=23ad7bb16722a25751865eeee3a64a12",
+                "http://api.live.bilibili.com/AppIndex/dynamic?_device=android&appkey=1d8b6e7d45233436&area=e-sports&build=506000&mobi_app=android&platform=android&ts=1497834932&sign=69667f6782a996511bbed21024bf9427",
+                "http://api.live.bilibili.com/AppIndex/dynamic?_device=android&appkey=1d8b6e7d45233436&area=otaku&build=506000&mobi_app=android&platform=android&ts=1497834969&sign=5dcce13365c4daf79f09d9b018554bdc",
+                "http://api.live.bilibili.com/AppIndex/dynamic?_device=android&appkey=1d8b6e7d45233436&area=movie&build=506000&mobi_app=android&platform=android&ts=1497834995&sign=db4d9d6cc62eb0d17502c140e8fc7ad2" };
+        String url = "";
+        for (int i = 0; i < urls.length; i++) {
+            if (urls[i].contains(area)) {
+                url = urls[i];
+            }
         }
-        if ("ent-life".equals(area)) {
-            ts = "1497834030";
-            sign = "ee2cc1f66aa8542e143b78bbb1f4c4b7";
-        }
-        if ("sing-dance".equals(area)) {
-            ts = "1497834281";
-            sign = "c3efe076b074d3d6fc7cddb2a08568a8";
-        }
-        if ("mobile-game".equals(area)) {
-            ts = "1497834322";
-            sign = "a0bfc83eee1d0986739583a72c686651";
-        }
-        if ("single".equals(area)) {
-            ts = "1497834367";
-            sign = "47d03855e86bc5e74fcdff91d27a0af7";
-        }
-        if ("online".equals(area)) {
-            ts = "1497834906";
-            sign = "23ad7bb16722a25751865eeee3a64a12";
-        }
-        if ("e-sports".equals(area)) {
-            ts = "1497834932";
-            sign = "69667f6782a996511bbed21024bf9427";
-        }
-        if ("otaku".equals(area)) {
-            ts = "1497834969";
-            sign = "5dcce13365c4daf79f09d9b018554bdc";
-        }
-        if ("movie".equals(area)) {
-            ts = "1497834995";
-            sign = "db4d9d6cc62eb0d17502c140e8fc7ad2";
-        }
-
-        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getLiveCategoryRefresh("android", "1d8b6e7d45233436", area, "506000", "android", "android", ts, sign);
+        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getUrl(url);
         call.enqueue(new Callback<JSONObject>() {
             @Override
             public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {

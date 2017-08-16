@@ -172,7 +172,12 @@ public class LiveAllFragment extends BindFragment {
                 content = "roundroom";
                 break;
         }
-        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getLiveAll("android", "TXkfLxcmRXdGfkgqVipLeU18SCocfz9MKF9uWD9DJR1oDHlIfkp6Q3NDekJ1Qw", "1d8b6e7d45233436", 0, "509001", "android", mPage, "android", content, "bili", "20170712132700022", "1499837242", "5.9.0.509000", "5ba2da452fa456d589cacdb1ce3d50dc");
+        String url = "http://api.live.bilibili.com/mobile/rooms?_device=android&_hwid=TXkfLxcmRXdGfkgqVipLeU18SCocfz9MKF9uWD9DJR1oDHlIfkp6Q3NDekJ1Qw&appkey=1d8b6e7d45233436&area_id=0&build=509000&mobi_app=android&page="
+                + mPage
+                + "&platform=android&sort="
+                + content
+                + "&src=bili&trace_id=20170711135500024&ts=1499752524&version=5.9.0.509000&sign=5ba2da452fa456d589cacdb1ce3d50dc";
+        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getUrl(url);
         call.enqueue(new Callback<JSONObject>() {
             @Override
             public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {

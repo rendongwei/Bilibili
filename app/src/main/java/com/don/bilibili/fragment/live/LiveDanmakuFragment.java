@@ -29,91 +29,91 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LiveDanmakuFragment extends BindFragment implements
-		OnClickListener {
+        OnClickListener {
 
-	@Id(id = R.id.live_danmaku_lv_display)
-	private RecyclerView mLvDisplay;
-	@Id(id = R.id.live_danmaku_layout_gift)
-	@OnClick
-	private LinearLayout mLayoutGift;
-	@Id(id = R.id.live_danmaku_et_content)
-	private EditText mEtContent;
-	@Id(id = R.id.live_danmaku_layout_send)
-	@OnClick
-	private LinearLayout mLayoutSend;
+    @Id(id = R.id.live_danmaku_lv_display)
+    private RecyclerView mLvDisplay;
+    @Id(id = R.id.live_danmaku_layout_gift)
+    @OnClick
+    private LinearLayout mLayoutGift;
+    @Id(id = R.id.live_danmaku_et_content)
+    private EditText mEtContent;
+    @Id(id = R.id.live_danmaku_layout_send)
+    @OnClick
+    private LinearLayout mLayoutSend;
 
-	private List<LiveMessage> mMessages = new ArrayList<LiveMessage>();
-	private LiveDanmakuAdapter mAdapter;
+    private List<LiveMessage> mMessages = new ArrayList<LiveMessage>();
+    private LiveDanmakuAdapter mAdapter;
 
-	private Map<String, LiveTitle> mTitles = new HashMap<String, LiveTitle>();
+    private Map<String, LiveTitle> mTitles = new HashMap<String, LiveTitle>();
 
-	@Override
-	protected int getContentView() {
-		return R.layout.fragment_live_danmaku;
-	}
+    @Override
+    protected int getContentView() {
+        return R.layout.fragment_live_danmaku;
+    }
 
-	@Override
-	protected void bindListener() {
+    @Override
+    protected void bindListener() {
 
-	}
+    }
 
-	@Override
-	protected void init() {
-		getLiveTitle();
-		initRecyclerView();
-		mAdapter = new LiveDanmakuAdapter(mContext, mMessages, mTitles);
-		mLvDisplay.setAdapter(mAdapter);
-	}
+    @Override
+    protected void init() {
+        getLiveTitle();
+        initRecyclerView();
+        mAdapter = new LiveDanmakuAdapter(mContext, mMessages, mTitles);
+        mLvDisplay.setAdapter(mAdapter);
+    }
 
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.live_danmaku_layout_gift:
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.live_danmaku_layout_gift:
 
-			break;
+                break;
 
-		case R.id.live_danmaku_layout_send:
+            case R.id.live_danmaku_layout_send:
 
-			break;
-		}
-	}
+                break;
+        }
+    }
 
-	private void initRecyclerView() {
-		mLvDisplay.setNestedScrollingEnabled(false);
-		LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
-		layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-		layoutManager.setAutoMeasureEnabled(true);
-		layoutManager.setSmoothScrollbarEnabled(true);
-		mLvDisplay.setLayoutManager(layoutManager);
-	}
+    private void initRecyclerView() {
+        mLvDisplay.setNestedScrollingEnabled(false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        layoutManager.setAutoMeasureEnabled(true);
+        layoutManager.setSmoothScrollbarEnabled(true);
+        mLvDisplay.setLayoutManager(layoutManager);
+    }
 
-	public void add(LiveMessage message) {
-		mMessages.add(message);
-		mAdapter.notifyItemInserted(mMessages.size() - 1);
-		mLvDisplay.scrollToPosition(mMessages.size() - 1);
-	}
+    public void add(LiveMessage message) {
+        mMessages.add(message);
+        mAdapter.notifyItemInserted(mMessages.size() - 1);
+        mLvDisplay.scrollToPosition(mMessages.size() - 1);
+    }
 
-	private void getLiveTitle() {
-		Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getLiveMessageTitle("android", "1d8b6e7d45233436", "506000", "android", "android", "xxhdpi", "1499216815", "1c68ab0a9e79b4af5aaf582917fbcdea");
-		call.enqueue(new Callback<JSONObject>() {
-			@Override
-			public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
-				if (response.body().optInt("code", -1) == 0) {
-					JSONArray array = response.body().optJSONArray("data");
-					if (array != null) {
-						for (int i = 0; i < array.length(); i++) {
-							LiveTitle title = new LiveTitle();
-							title.parse(array.optJSONObject(i));
-							mTitles.put(title.getId(), title);
-						}
-					}
-				}
-			}
+    private void getLiveTitle() {
+        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getUrl("http://api.live.bilibili.com/appUser/getTitle?_device=android&appkey=1d8b6e7d45233436&build=506000&mobi_app=android&platform=android&scale=xxhdpi&ts=1499216815&sign=1c68ab0a9e79b4af5aaf582917fbcdea");
+        call.enqueue(new Callback<JSONObject>() {
+            @Override
+            public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
+                if (response.body().optInt("code", -1) == 0) {
+                    JSONArray array = response.body().optJSONArray("data");
+                    if (array != null) {
+                        for (int i = 0; i < array.length(); i++) {
+                            LiveTitle title = new LiveTitle();
+                            title.parse(array.optJSONObject(i));
+                            mTitles.put(title.getId(), title);
+                        }
+                    }
+                }
+            }
 
-			@Override
-			public void onFailure(Call<JSONObject> call, Throwable t) {
+            @Override
+            public void onFailure(Call<JSONObject> call, Throwable t) {
 
-			}
-		});
-	}
+            }
+        });
+    }
 }

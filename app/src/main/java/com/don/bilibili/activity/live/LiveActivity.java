@@ -651,7 +651,7 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
     }
 
     public void getInfo() {
-        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getLiveInfo("android", "1d8b6e7d45233436", "506000", "506000", "24000", "android", "android", mLive.getRoomId(), "xxhdpi", "1499216815", "c17733d913d0a24036a950a68bb75d19");
+        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getUrl("http://api.live.bilibili.com/AppRoom/index?_device=android&appkey=1d8b6e7d45233436&build=506000&buld=506000&jumpFrom=24000&mobi_app=android&platform=android&room_id=" + mLive.getRoomId() + "&scale=xxhdpi&ts=1499216815&sign=c17733d913d0a24036a950a68bb75d19");
         call.enqueue(new Callback<JSONObject>() {
             @Override
             public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
@@ -720,7 +720,7 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
     }
 
     private void getRoundInfo() {
-        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getLiveRoundInfo("android", "TXkfLxcmRXdGfkgqVipLeU18SCocfz9MKF9uWD9DJR1oDHlIfkp6Q3NDekJ1Qw", "1d8b6e7d45233436", "509000", "android", "android", mLive.getRoomId(), "bili", "20170711151600003", "1499757363", "5.9.0.509000", "d5c5e039e09dd7e279260259bbfbfa2a");
+        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getUrl("http://api.live.bilibili.com/live/getRoundPlayVideo?_device=android&_hwid=TXkfLxcmRXdGfkgqVipLeU18SCocfz9MKF9uWD9DJR1oDHlIfkp6Q3NDekJ1Qw&appkey=1d8b6e7d45233436&build=509000&mobi_app=android&platform=android&room_id=" + mLive.getRoomId() + "&src=bili&trace_id=20170711151600003&ts=1499757363&version=5.9.0.509000&sign=d5c5e039e09dd7e279260259bbfbfa2a");
         call.enqueue(new Callback<JSONObject>() {
             @Override
             public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
@@ -743,7 +743,7 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
     }
 
     private void getRoundPlayUrl(String url) {
-        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getLiveRoundPlayUrl(url);
+        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getUrl(url);
         call.enqueue(new Callback<JSONObject>() {
             @Override
             public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
@@ -797,7 +797,7 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
             }
         };
         if (mMessageCall == null) {
-            mMessageCall = HttpManager.getInstance().getApiSevice().getLiveMessage("android", "1d8b6e7d45233436", "506000", "android", "android", mLive.getRoomId(), "1499146112", "b5ff78c13763f307d7fbd3cb7b7b5467");
+            mMessageCall = HttpManager.getInstance().getApiSevice().getUrl("http://api.live.bilibili.com/AppRoom/msg?_device=android&appkey=1d8b6e7d45233436&build=506000&mobi_app=android&platform=android&room_id=" + mLive.getRoomId() + "&ts=1499146112&sign=b5ff78c13763f307d7fbd3cb7b7b5467");
         } else {
             mMessageCall.cancel();
             mMessageCall = mMessageCall.clone();
