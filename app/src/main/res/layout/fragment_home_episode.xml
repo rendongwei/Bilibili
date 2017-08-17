@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/episode_layout_refresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/episode_layout_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:overScrollMode="never" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="vertical" >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal" >
+
+                        <RelativeLayout
+                            android:id="@+id/episode_layout_bangumi"
+                            android:layout_width="0dip"
+                            android:layout_height="60dip"
+                            android:layout_marginLeft="25dip"
+                            android:layout_weight="1" >
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="40dip"
+                                android:layout_alignParentBottom="true"
+                                android:scaleType="fitStart"
+                                android:src="@drawable/bangumi_follow_home_ic_index_bangumi" />
+
+                            <ImageView
+                                android:layout_width="60dip"
+                                android:layout_height="60dip"
+                                android:layout_marginLeft="8dip"
+                                android:src="@drawable/bangumi_follow_home_ic_index_bangumi2" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/episode_layout_domestic"
+                            android:layout_width="0dip"
+                            android:layout_height="60dip"
+                            android:layout_weight="1" >
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="40dip"
+                                android:layout_alignParentBottom="true"
+                                android:scaleType="fitStart"
+                                android:src="@drawable/bangumi_follow_home_ic_index_domestic" />
+
+                            <ImageView
+                                android:layout_width="60dip"
+                                android:layout_height="60dip"
+                                android:layout_marginLeft="8dip"
+                                android:src="@drawable/bangumi_follow_home_ic_index_domestic2" />
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_marginTop="8dip"
+                        android:background="@color/line" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="35dip"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal" >
+
+                        <LinearLayout
+                            android:id="@+id/episode_layout_timeline"
+                            android:layout_width="0dip"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_black20_selector"
+                            android:gravity="center"
+                            android:orientation="horizontal" >
+
+                            <ImageView
+                                android:layout_width="25dip"
+                                android:layout_height="25dip"
+                                android:src="@drawable/bangumi_follow_home_ic_timeline" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="20dip"
+                                android:text="时间表"
+                                android:textColor="@color/c_999999"
+                                android:textSize="12dip" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="1px"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="8dip"
+                            android:layout_marginTop="8dip"
+                            android:background="@color/line" />
+
+                        <LinearLayout
+                            android:id="@+id/episode_layout_index"
+                            android:layout_width="0dip"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_black20_selector"
+                            android:gravity="center"
+                            android:orientation="horizontal" >
+
+                            <ImageView
+                                android:layout_width="25dip"
+                                android:layout_height="25dip"
+                                android:src="@drawable/bangumi_follow_home_ic_index" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="20dip"
+                                android:text="索引"
+                                android:textColor="@color/c_999999"
+                                android:textSize="12dip" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="100dip"
+                    android:layout_marginTop="8dip"
+                    android:background="@drawable/bangumi_follow_home_login_guide" >
+
+                    <View
+                        android:id="@+id/episode_v_login"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_black20_selector" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/episode_layout_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:padding="8dip"
+                    android:visibility="gone" >
+
+                    <LinearLayout
+                        android:id="@+id/episode_layout_bangumi_more"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dip"
+                        android:layout_marginTop="8dip"
+                        android:background="@drawable/bg_black20_selector"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal" >
+
+                        <ImageView
+                            android:layout_width="20dip"
+                            android:layout_height="20dip"
+                            android:src="@drawable/bangumi_follow_home_ic_bangumi" />
+
+                        <TextView
+                            android:layout_width="0dip"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dip"
+                            android:layout_weight="1"
+                            android:text="番剧推荐"
+                            android:textColor="@color/black"
+                            android:textSize="14dip" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dip"
+                            android:text="查看更多"
+                            android:textColor="@color/c_666666"
+                            android:textSize="12dip" />
+
+                        <ImageView
+                            android:layout_width="10dip"
+                            android:layout_height="10dip"
+                            android:layout_marginLeft="4dip"
+                            android:src="@drawable/ic_gray_arrow_right" />
+                    </LinearLayout>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/episode_lv_bangumi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <LinearLayout
+                        android:id="@+id/episode_layout_domestic_more"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dip"
+                        android:layout_marginTop="8dip"
+                        android:background="@drawable/bg_black20_selector"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal" >
+
+                        <ImageView
+                            android:layout_width="20dip"
+                            android:layout_height="20dip"
+                            android:src="@drawable/bangumi_follow_home_ic_domestic" />
+
+                        <TextView
+                            android:layout_width="0dip"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dip"
+                            android:layout_weight="1"
+                            android:text="国产动画推荐"
+                            android:textColor="@color/black"
+                            android:textSize="14dip" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dip"
+                            android:text="查看更多"
+                            android:textColor="@color/c_666666"
+                            android:textSize="12dip" />
+
+                        <ImageView
+                            android:layout_width="10dip"
+                            android:layout_height="10dip"
+                            android:layout_marginLeft="4dip"
+                            android:src="@drawable/ic_gray_arrow_right" />
+                    </LinearLayout>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/episode_lv_domestic"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/episode_layout_error"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/img_tips_error_load_error" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dip"
+                    android:text="加载失败了Σ(OДO"
+                    android:textColor="@color/c_999999"
+                    android:textSize="14dip" />
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+</android.support.v4.widget.SwipeRefreshLayout>

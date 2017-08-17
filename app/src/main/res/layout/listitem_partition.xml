@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/listitem_partition_layout_top"
+        android:layout_width="match_parent"
+        android:layout_height="40dip"
+        android:background="@drawable/bg_black20_selector"
+        android:duplicateParentState="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/listitem_partition_iv_icon"
+            android:layout_width="25dip"
+            android:layout_height="25dip" />
+
+        <TextView
+            android:id="@+id/listitem_partition_tv_name"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dip"
+            android:layout_weight="1"
+            android:textColor="@color/black"
+            android:textSize="14dip" />
+
+        <TextView
+            android:id="@+id/listitem_partition_tv_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dip"
+            android:background="@drawable/bg_gray"
+            android:padding="8dip"
+            android:text="进去看看"
+            android:textColor="@color/white"
+            android:textSize="12dip" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/listitem_partition_layout_banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dip" >
+
+        <ImageView
+            android:id="@+id/listitem_partition_iv_banner"
+            android:layout_width="match_parent"
+            android:layout_height="100dip"
+            android:scaleType="fitXY" />
+
+        <View
+            android:id="@+id/listitem_partition_v_banner_shadow"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@+id/listitem_partition_iv_banner"
+            android:layout_alignLeft="@+id/listitem_partition_iv_banner"
+            android:layout_alignRight="@+id/listitem_partition_iv_banner"
+            android:layout_alignTop="@+id/listitem_partition_iv_banner"
+            android:background="@drawable/bg_black20_gray_line_selector" />
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/listitem_partition_lv_display"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

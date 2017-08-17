@@ -14,7 +14,11 @@ import com.don.bilibili.adapter.TabAdapter;
 import com.don.bilibili.annotation.Id;
 import com.don.bilibili.annotation.OnClick;
 import com.don.bilibili.fragment.base.BindFragment;
+import com.don.bilibili.fragment.home.DynamicFragment;
+import com.don.bilibili.fragment.home.EpisodeFragment;
+import com.don.bilibili.fragment.home.FindFragment;
 import com.don.bilibili.fragment.home.LiveFragment;
+import com.don.bilibili.fragment.home.PartitionFragment;
 import com.don.bilibili.fragment.home.RecommendFragment;
 import com.don.bilibili.utils.DisplayUtil;
 
@@ -62,6 +66,10 @@ public class HomeFragment extends BindFragment implements View.OnClickListener {
 
     private LiveFragment mLiveFragment;
     private RecommendFragment mRecommendFragment;
+    private EpisodeFragment mEpisodeFragment;
+    private PartitionFragment mPartitionFragment;
+    private DynamicFragment mDynamicFragment;
+    private FindFragment mFindFragment;
 
     @Override
     protected int getContentView() {
@@ -93,8 +101,17 @@ public class HomeFragment extends BindFragment implements View.OnClickListener {
         List<Fragment> mFragments = new ArrayList<Fragment>();
         mLiveFragment = new LiveFragment();
         mRecommendFragment = new RecommendFragment();
+        mEpisodeFragment = new EpisodeFragment();
+        mPartitionFragment = new PartitionFragment();
+        mDynamicFragment = new DynamicFragment();
+        mFindFragment = new FindFragment();
         mFragments.add(mLiveFragment);
         mFragments.add(mRecommendFragment);
+        mFragments.add(mEpisodeFragment);
+        mFragments.add(mPartitionFragment);
+        mFragments.add(mDynamicFragment);
+        mFragments.add(mFindFragment);
+        mVpDisplay.setOffscreenPageLimit(6);
         mVpDisplay.setAdapter(new TabAdapter(getChildFragmentManager(),
                 mFragments,"直播", "推荐", "追番", "分区", "动态", "发现"));
         mLayoutTab.setupWithViewPager(mVpDisplay);

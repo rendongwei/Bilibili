@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <LinearLayout
+        android:id="@+id/listitem_home_episode_foot_layout_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FAFAFA"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dip" >
+
+            <ImageView
+                android:id="@+id/listitem_home_episode_foot_iv_cover"
+                android:layout_width="match_parent"
+                android:layout_height="100dip"
+                android:scaleType="fitXY" />
+
+            <LinearLayout
+                android:id="@+id/listitem_home_episode_foot_layout_new"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="8dip"
+                android:background="@drawable/bg_home_episode_new_gray"
+                android:orientation="vertical"
+                android:paddingBottom="2dip"
+                android:paddingLeft="2dip"
+                android:paddingRight="2dip" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_home_episode_new"
+                    android:paddingBottom="2dip"
+                    android:paddingLeft="4dip"
+                    android:paddingRight="4dip"
+                    android:paddingTop="2dip"
+                    android:text="NEW!!"
+                    android:textColor="@color/white"
+                    android:textSize="10dip"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/listitem_home_episode_foot_tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="4dip"
+            android:paddingRight="4dip"
+            android:paddingTop="4dip"
+            android:textColor="@color/black"
+            android:textSize="12dip" />
+
+        <TextView
+            android:id="@+id/listitem_home_episode_foot_tv_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dip"
+            android:textColor="@color/c_999999"
+            android:textSize="12dip" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/listitem_home_episode_foot_v_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignBottom="@+id/listitem_home_episode_foot_layout_container"
+        android:layout_alignLeft="@+id/listitem_home_episode_foot_layout_container"
+        android:layout_alignRight="@+id/listitem_home_episode_foot_layout_container"
+        android:layout_alignTop="@+id/listitem_home_episode_foot_layout_container"
+        android:background="@drawable/bg_black20_selector" />
+
+</RelativeLayout>
