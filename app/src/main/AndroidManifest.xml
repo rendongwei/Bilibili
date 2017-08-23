@@ -31,6 +31,10 @@
             android:name=".activity.live.LiveActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="adjustPan"/>
+
+        <service
+            android:name=".service.SignService"
+            android:process=":service"/>
     </application>
 
 </manifest>
