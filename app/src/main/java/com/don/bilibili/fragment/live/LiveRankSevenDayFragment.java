@@ -1,5 +1,7 @@
 package com.don.bilibili.fragment.live;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -10,6 +12,7 @@ import com.don.bilibili.annotation.Id;
 import com.don.bilibili.fragment.base.BindFragment;
 import com.don.bilibili.http.HttpManager;
 import com.don.bilibili.model.LiveRankSevenDay;
+import com.don.bilibili.service.SignService;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -26,8 +29,15 @@ public class LiveRankSevenDayFragment extends BindFragment {
     @Id(id = R.id.live_rank_child_lv_display)
     private RecyclerView mLvDisplay;
 
+    private int mId;
+
     private List<LiveRankSevenDay> mSevenDays = new ArrayList<LiveRankSevenDay>();
     private LiveRankSevenDayAdapter mAdapter;
+
+    public LiveRankSevenDayFragment(int id) {
+        super();
+        mId = id;
+    }
 
     @Override
     protected int getContentView() {
@@ -36,13 +46,20 @@ public class LiveRankSevenDayFragment extends BindFragment {
 
     @Override
     protected void bindListener() {
-
+        setOnGetSignCallBack(new OnGetSignCallBack() {
+            @Override
+            public void callback(String method, String sign) {
+                if ("AppRoom/getGiftTop".equals(method)) {
+                    getLiveRankSevenDay(sign);
+                }
+            }
+        });
     }
 
     @Override
     protected void init() {
         initRecyclerView();
-        getLiveRankSevenDay();
+        getSign();
     }
 
     private void initRecyclerView() {
@@ -54,8 +71,28 @@ public class LiveRankSevenDayFragment extends BindFragment {
         mLvDisplay.setLayoutManager(layoutManager);
     }
 
-    private void getLiveRankSevenDay() {
-        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getUrl("http://api.live.bilibili.com/AppRoom/getGiftTop?_device=android&_hwid=9edc79b18c3cf6f9&access_key=bda109fc53f39041fab6cbe2bd043ec1&appkey=1d8b6e7d45233436&build=508000&mobi_app=android&platform=android&room_id=10248&src=bili&trace_id=20170707090700025&ts=1499389645&version=5.8.0.508000&sign=1f58b3ab9fb0e79d3f025106c918697e");
+    private void getSign() {
+        Bundle bundle = new Bundle();
+        Intent intent = new Intent(mContext, SignService.class);
+        intent.putExtra("method", "AppRoom/getGiftTop");
+        bundle.putString("_device", "android");
+        bundle.putString("_hwid", "9edc79b18c3cf6f9");
+        bundle.putString("access_key", "bda109fc53f39041fab6cbe2bd043ec1");
+        bundle.putString("appkey", "1d8b6e7d45233436");
+        bundle.putString("build", "508000");
+        bundle.putString("mobi_app", "android");
+        bundle.putString("platform", "android");
+        bundle.putString("room_id", mId + "");
+        bundle.putString("src", "bili");
+        bundle.putString("trace_id", "20170707090700025");
+        bundle.putString("ts", "1499389645");
+        bundle.putString("version", "5.8.0.508000");
+        intent.putExtra("param", bundle);
+        mContext.startService(intent);
+    }
+
+    private void getLiveRankSevenDay(String sign) {
+        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getUrl("http://api.live.bilibili.com/AppRoom/getGiftTop?_device=android&_hwid=9edc79b18c3cf6f9&access_key=bda109fc53f39041fab6cbe2bd043ec1&appkey=1d8b6e7d45233436&build=508000&mobi_app=android&platform=android&room_id=" + mId + "&src=bili&trace_id=20170707090700025&ts=1499389645&version=5.8.0.508000&sign=" + sign);
         call.enqueue(new Callback<JSONObject>() {
             @Override
             public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {

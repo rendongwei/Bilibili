@@ -21,14 +21,6 @@ public final class LibBili {
         System.loadLibrary("bili");
     }
 
-    public static SignedQuery a(Map<String, String> map) {
-        if (map == null) {
-            return null;
-        }
-        TreeMap<String, String> localTreeMap = new TreeMap(map);
-        return s(localTreeMap);
-    }
-
     public static String c(String paramString) {
         return a(paramString);
     }
@@ -77,6 +69,6 @@ public final class LibBili {
     @Deprecated
     public static native int getCpuId();
 
-    static native SignedQuery s(SortedMap<String, String> map);
+    public static native SignedQuery s(SortedMap<String, String> map);
 
 }

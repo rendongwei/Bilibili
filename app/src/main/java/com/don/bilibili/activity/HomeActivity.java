@@ -27,7 +27,7 @@ public class HomeActivity extends TranslucentStatusBarActivity {
 
     @Override
     protected void bindListener() {
-
+        
     }
 
     @Override

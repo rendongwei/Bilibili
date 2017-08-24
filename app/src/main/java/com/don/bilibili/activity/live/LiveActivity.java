@@ -320,12 +320,13 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
 
         List<Fragment> mFragments = new ArrayList<Fragment>();
         mDanmakuFragment = new LiveDanmakuFragment();
-        mRankFragment = new LiveRankFragment();
+        mRankFragment = new LiveRankFragment(mLive.getRoomId());
         mGuardRankFragment = new LiveGuardRankFragment(mLive.getOwner()
                 .getMid());
         mFragments.add(mDanmakuFragment);
         mFragments.add(mRankFragment);
         mFragments.add(mGuardRankFragment);
+        mVpDisplay.setOffscreenPageLimit(3);
         mVpDisplay.setAdapter(new TabAdapter(getSupportFragmentManager(),
                 mFragments, "互动", "排行榜", "舰队"));
         mLayoutTab.setupWithViewPager(mVpDisplay);

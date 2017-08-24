@@ -16,41 +16,49 @@ import java.util.List;
 
 public class LiveRankFragment extends BindFragment implements OnClickListener {
 
-	@Id(id = R.id.live_rank_layout_tab)
-	private TabLayout mLayoutTab;
-	@Id(id = R.id.live_rank_vp_display)
-	private ViewPager mVpDisplay;
+    @Id(id = R.id.live_rank_layout_tab)
+    private TabLayout mLayoutTab;
+    @Id(id = R.id.live_rank_vp_display)
+    private ViewPager mVpDisplay;
 
-	private LiveRankSevenDayFragment mSevenDayFragment;
-	private LiveRankLoveFragment mLoveFragment;
-	private LiveRankFavoriteFragment mFavoriteFragment;
+    private int mId;
 
-	@Override
-	protected int getContentView() {
-		return R.layout.fragment_live_rank;
-	}
+    private LiveRankSevenDayFragment mSevenDayFragment;
+    private LiveRankLoveFragment mLoveFragment;
+    private LiveRankFavoriteFragment mFavoriteFragment;
 
-	@Override
-	protected void bindListener() {
+    public LiveRankFragment(int id) {
+        super();
+        mId = id;
+    }
 
-	}
+    @Override
+    protected int getContentView() {
+        return R.layout.fragment_live_rank;
+    }
 
-	@Override
-	protected void init() {
-		List<Fragment> mFragments = new ArrayList<Fragment>();
-		mSevenDayFragment = new LiveRankSevenDayFragment();
-		mLoveFragment = new LiveRankLoveFragment();
-		mFavoriteFragment = new LiveRankFavoriteFragment();
-		mFragments.add(mSevenDayFragment);
-		mFragments.add(mLoveFragment);
-		mFragments.add(mFavoriteFragment);
-		mVpDisplay.setAdapter(new TabAdapter(getChildFragmentManager(),
-				mFragments,"七日榜", "有爱榜", "粉丝榜" ));
-		mLayoutTab.setupWithViewPager(mVpDisplay);
-	}
+    @Override
+    protected void bindListener() {
 
-	@Override
-	public void onClick(View v) {
+    }
 
-	}
+    @Override
+    protected void init() {
+        List<Fragment> mFragments = new ArrayList<Fragment>();
+        mSevenDayFragment = new LiveRankSevenDayFragment(mId);
+        mLoveFragment = new LiveRankLoveFragment(mId);
+        mFavoriteFragment = new LiveRankFavoriteFragment(mId);
+        mFragments.add(mSevenDayFragment);
+        mFragments.add(mLoveFragment);
+        mFragments.add(mFavoriteFragment);
+        mVpDisplay.setOffscreenPageLimit(3);
+        mVpDisplay.setAdapter(new TabAdapter(getChildFragmentManager(),
+                mFragments, "七日榜", "有爱榜", "粉丝榜"));
+        mLayoutTab.setupWithViewPager(mVpDisplay);
+    }
+
+    @Override
+    public void onClick(View v) {
+
+    }
 }
