@@ -299,6 +299,19 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
                         return true;
                     }
                 });
+        setOnGetSignCallBack(new OnGetSignCallBack() {
+            @Override
+            public void callback(String method, String sign) {
+                if ("http://api.live.bilibili.com/AppRoom/guardRank?".equals(method) && mGuardRankFragment != null) {
+                    mGuardRankFragment.getLiveGuardRank(sign);
+                }
+                if (("http://api.live.bilibili.com/AppRoom/medalRankList?".equals(method)
+                        || "http://api.live.bilibili.com/AppRoom/opTop?".equals(method)
+                        || "http://api.live.bilibili.com/AppRoom/getGiftTop?".equals(method)) && mRankFragment != null) {
+                    mRankFragment.getSignCallBack(method, sign);
+                }
+            }
+        });
     }
 
     @Override
@@ -330,7 +343,7 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
         mVpDisplay.setAdapter(new TabAdapter(getSupportFragmentManager(),
                 mFragments, "互动", "排行榜", "舰队"));
         mLayoutTab.setupWithViewPager(mVpDisplay);
-
+        mVpDisplay.setCurrentItem(0);
         getInfo();
         getMessage();
     }

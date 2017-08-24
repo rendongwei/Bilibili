@@ -15,9 +15,22 @@ import android.text.TextPaint;
 
 import com.don.bilibili.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 public class Util {
+
+    public static String[] getTs() {
+        long time = System.currentTimeMillis();
+        long ts = time / 1000;
+        Date date = new Date();
+        date.setTime(time);
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        String s = format.format(date);
+        return new String[]{ts + "", s};
+    }
+
     public static void initRefresh(SwipeRefreshLayout layout) {
         layout.setProgressBackgroundColor(R.color.white);
         layout.setColorSchemeResources(R.color.pink);
@@ -26,12 +39,12 @@ public class Util {
                 DisplayUtil.dip2px(layout.getContext(), 60));
     }
 
-    public static GridLayoutManager getGridLayoutManager(Context context,int spanCount,GridLayoutManager.SpanSizeLookup spanSizeLookup){
-        GridLayoutManager manager = new GridLayoutManager(context,spanCount);
+    public static GridLayoutManager getGridLayoutManager(Context context, int spanCount, GridLayoutManager.SpanSizeLookup spanSizeLookup) {
+        GridLayoutManager manager = new GridLayoutManager(context, spanCount);
         manager.setAutoMeasureEnabled(true);
         manager.setSmoothScrollbarEnabled(true);
         if (spanSizeLookup != null) manager.setSpanSizeLookup(spanSizeLookup);
-        return  manager;
+        return manager;
     }
 
     public static int parseColor(int color) {
@@ -51,8 +64,8 @@ public class Util {
         GradientDrawable gd = new GradientDrawable();
         gd.setColor(fillColor);
         int radius = DisplayUtil.dip2px(context, 4);
-        gd.setCornerRadii(new float[] { radius, radius, 0, 0, 0, 0, radius,
-                radius });
+        gd.setCornerRadii(new float[]{radius, radius, 0, 0, 0, 0, radius,
+                radius});
         return gd;
     }
 
@@ -61,8 +74,8 @@ public class Util {
         gd.setColor(Color.WHITE);
         gd.setStroke(DisplayUtil.dip2px(context, 1), strokeColor);
         int radius = DisplayUtil.dip2px(context, 4);
-        gd.setCornerRadii(new float[] { 0, 0, radius, radius, radius, radius,
-                0, 0 });
+        gd.setCornerRadii(new float[]{0, 0, radius, radius, radius, radius,
+                0, 0});
         return gd;
     }
 
@@ -156,7 +169,7 @@ public class Util {
 
         // level背景
         rectF = new RectF(dip25, dip1, width - dip1, height - dip1);
-        float[] radii = new float[] { 0, 0, dip4, dip4, dip4, dip4, 0, 0 };
+        float[] radii = new float[]{0, 0, dip4, dip4, dip4, dip4, 0, 0};
         Path path = new Path();
         path.addRoundRect(rectF, radii, Path.Direction.CW);
         canvas.drawPath(path, paint);

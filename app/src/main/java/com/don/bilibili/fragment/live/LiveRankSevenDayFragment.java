@@ -13,6 +13,7 @@ import com.don.bilibili.fragment.base.BindFragment;
 import com.don.bilibili.http.HttpManager;
 import com.don.bilibili.model.LiveRankSevenDay;
 import com.don.bilibili.service.SignService;
+import com.don.bilibili.utils.Util;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -34,6 +35,8 @@ public class LiveRankSevenDayFragment extends BindFragment {
     private List<LiveRankSevenDay> mSevenDays = new ArrayList<LiveRankSevenDay>();
     private LiveRankSevenDayAdapter mAdapter;
 
+    private String[] mTs;
+
     public LiveRankSevenDayFragment(int id) {
         super();
         mId = id;
@@ -46,14 +49,7 @@ public class LiveRankSevenDayFragment extends BindFragment {
 
     @Override
     protected void bindListener() {
-        setOnGetSignCallBack(new OnGetSignCallBack() {
-            @Override
-            public void callback(String method, String sign) {
-                if ("AppRoom/getGiftTop".equals(method)) {
-                    getLiveRankSevenDay(sign);
-                }
-            }
-        });
+
     }
 
     @Override
@@ -72,9 +68,10 @@ public class LiveRankSevenDayFragment extends BindFragment {
     }
 
     private void getSign() {
+        mTs = Util.getTs();
         Bundle bundle = new Bundle();
         Intent intent = new Intent(mContext, SignService.class);
-        intent.putExtra("method", "AppRoom/getGiftTop");
+        intent.putExtra("method", "http://api.live.bilibili.com/AppRoom/getGiftTop?");
         bundle.putString("_device", "android");
         bundle.putString("_hwid", "9edc79b18c3cf6f9");
         bundle.putString("access_key", "bda109fc53f39041fab6cbe2bd043ec1");
@@ -84,15 +81,15 @@ public class LiveRankSevenDayFragment extends BindFragment {
         bundle.putString("platform", "android");
         bundle.putString("room_id", mId + "");
         bundle.putString("src", "bili");
-        bundle.putString("trace_id", "20170707090700025");
-        bundle.putString("ts", "1499389645");
+        bundle.putString("trace_id", mTs[1]);
+        bundle.putString("ts", mTs[0]);
         bundle.putString("version", "5.8.0.508000");
         intent.putExtra("param", bundle);
         mContext.startService(intent);
     }
 
-    private void getLiveRankSevenDay(String sign) {
-        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getUrl("http://api.live.bilibili.com/AppRoom/getGiftTop?_device=android&_hwid=9edc79b18c3cf6f9&access_key=bda109fc53f39041fab6cbe2bd043ec1&appkey=1d8b6e7d45233436&build=508000&mobi_app=android&platform=android&room_id=" + mId + "&src=bili&trace_id=20170707090700025&ts=1499389645&version=5.8.0.508000&sign=" + sign);
+    public void getLiveRankSevenDay(String sign) {
+        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getUrl(sign);
         call.enqueue(new Callback<JSONObject>() {
             @Override
             public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {

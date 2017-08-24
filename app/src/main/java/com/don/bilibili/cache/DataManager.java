@@ -19,14 +19,6 @@ public class DataManager {
         return mManager;
     }
 
-    public String getSignCache(String key) {
-        return mCacheManager.getSignCache(key);
-    }
-
-    public void setSignCache(String key, String sign) {
-        mCacheManager.setSignCache(key, sign);
-    }
-
     public Map<String, List<String>> getLiveAreaTagCache() {
         Map<String, List<String>> cache = mCacheManager.getLiveAreaTagCache();
         if (cache == null) {

@@ -13,6 +13,7 @@ import com.don.bilibili.fragment.base.BindFragment;
 import com.don.bilibili.http.HttpManager;
 import com.don.bilibili.model.LiveRankLove;
 import com.don.bilibili.service.SignService;
+import com.don.bilibili.utils.Util;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -35,6 +36,8 @@ public class LiveRankLoveFragment extends BindFragment {
     private List<LiveRankLove> mLoves = new ArrayList<LiveRankLove>();
     private LiveRankLoveAdapter mAdapter;
 
+    private String[] mTs;
+
     public LiveRankLoveFragment(int id) {
         super();
         mId = id;
@@ -47,14 +50,7 @@ public class LiveRankLoveFragment extends BindFragment {
 
     @Override
     protected void bindListener() {
-        setOnGetSignCallBack(new OnGetSignCallBack() {
-            @Override
-            public void callback(String method, String sign) {
-                if ("AppRoom/opTop".equals(method)){
-                    getLiveRankLove(sign);
-                }
-            }
-        });
+
     }
 
     @Override
@@ -73,9 +69,10 @@ public class LiveRankLoveFragment extends BindFragment {
     }
 
     private void getSign() {
+        mTs = Util.getTs();
         Bundle bundle = new Bundle();
         Intent intent = new Intent(mContext, SignService.class);
-        intent.putExtra("method", "AppRoom/opTop");
+        intent.putExtra("method", "http://api.live.bilibili.com/AppRoom/opTop?");
         bundle.putString("_device", "android");
         bundle.putString("_hwid", "9edc79b18c3cf6f9");
         bundle.putString("access_key", "bda109fc53f39041fab6cbe2bd043ec1");
@@ -87,15 +84,15 @@ public class LiveRankLoveFragment extends BindFragment {
         bundle.putString("scale", "xxhdpi");
         bundle.putString("type", "youaishe");
         bundle.putString("src", "bili");
-        bundle.putString("trace_id", "20170707090700027");
-        bundle.putString("ts", "1499389647");
+        bundle.putString("trace_id", mTs[1]);
+        bundle.putString("ts", mTs[0]);
         bundle.putString("version", "5.8.0.508000");
         intent.putExtra("param", bundle);
         mContext.startService(intent);
     }
 
-    private void getLiveRankLove(String sign) {
-        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getUrl("http://api.live.bilibili.com/AppRoom/opTop?_device=android&_hwid=9edc79b18c3cf6f9&access_key=bda109fc53f39041fab6cbe2bd043ec1&appkey=1d8b6e7d45233436&build=508000&mobi_app=android&platform=android&room_id=" + mId + "&scale=xxhdpi&src=bili&trace_id=20170707090700027&ts=1499389647&type=youaishe&version=5.8.0.508000&sign=" + sign);
+    public void getLiveRankLove(String sign) {
+        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getUrl(sign);
         call.enqueue(new Callback<JSONObject>() {
             @Override
             public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {

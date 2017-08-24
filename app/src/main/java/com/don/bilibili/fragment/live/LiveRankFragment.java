@@ -55,10 +55,23 @@ public class LiveRankFragment extends BindFragment implements OnClickListener {
         mVpDisplay.setAdapter(new TabAdapter(getChildFragmentManager(),
                 mFragments, "七日榜", "有爱榜", "粉丝榜"));
         mLayoutTab.setupWithViewPager(mVpDisplay);
+        mVpDisplay.setCurrentItem(0);
     }
 
     @Override
     public void onClick(View v) {
 
+    }
+
+    public void getSignCallBack(String method, String sign) {
+        if ("http://api.live.bilibili.com/AppRoom/medalRankList?".equals(method) && mFavoriteFragment != null) {
+            mFavoriteFragment.getLiveRankFavorite(sign);
+        }
+        if ("http://api.live.bilibili.com/AppRoom/opTop?".equals(method) && mLoveFragment != null) {
+            mLoveFragment.getLiveRankLove(sign);
+        }
+        if ("http://api.live.bilibili.com/AppRoom/getGiftTop?".equals(method) && mSevenDayFragment != null) {
+            mSevenDayFragment.getLiveRankSevenDay(sign);
+        }
     }
 }
