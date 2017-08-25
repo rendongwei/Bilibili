@@ -32,6 +32,8 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="adjustPan"/>
 
+        <activity android:name=".activity.recommend.RecommendActivity"/>
+
         <service
             android:name=".service.SignService"
             android:process=":service"/>

@@ -1,6 +1,13 @@
 package com.don.bilibili.model;
 
-public class HomeRecommend {
+import com.don.bilibili.Json.Json;
+
+public class HomeRecommend extends Json{
+
+	@Override
+	public Object getEntity() {
+		return this;
+	}
 
 	private Type type;
 	private HomeRecommendAv av;
