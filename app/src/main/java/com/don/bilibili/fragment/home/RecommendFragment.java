@@ -78,12 +78,7 @@ public class RecommendFragment extends BindFragment {
     protected void init() {
         Util.initRefresh(mLayoutRefresh);
         initRecyclerView();
-        mLayoutRefresh.post(new Runnable() {
-            @Override
-            public void run() {
-                mLayoutRefresh.setRefreshing(true);
-            }
-        });
+        mLayoutRefresh.setRefreshing(true);
         getRecommend(true);
     }
 
@@ -128,6 +123,7 @@ public class RecommendFragment extends BindFragment {
         if (mIsLoading) {
             return;
         }
+        mIsLoading = true;
         Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getUrl("https://app.bilibili.com/x/feed/index?appkey=1d8b6e7d45233436&build=506000&idx=1497856523&login_event=0&mobi_app=android&network=wifi&open_event=&platform=android&pull=" + isPull + "&style=1&ts=1497856515&sign=72c939f235bbb3d9d9d09edb0505a540");
         call.enqueue(new Callback<JSONObject>() {
             @Override
