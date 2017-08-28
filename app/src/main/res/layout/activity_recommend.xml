@@ -7,6 +7,7 @@
                                                  android:background="@color/background_gray">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/recommend_layout_appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         >
@@ -18,12 +19,24 @@
             app:contentScrim="@color/pink"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <ImageView
-                android:id="@+id/recommend_iv_image"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dip"
-                android:scaleType="fitXY"
-                app:layout_collapseMode="parallax"/>
+                android:layout_height="200dip">
+
+                <ImageView
+                    android:id="@+id/recommend_iv_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dip"
+                    android:scaleType="fitXY"
+                    app:layout_collapseMode="parallax"/>
+
+                <View
+                    android:id="@+id/recommend_v_ripple"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"/>
+            </FrameLayout>
+
 
             <android.support.v7.widget.Toolbar
                 android:layout_width="match_parent"
@@ -31,27 +44,59 @@
                 app:contentInsetStart="0dip"
                 app:layout_collapseMode="pin">
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="48dip"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:layout_height="48dip">
 
-                    <ImageView
-                        android:layout_width="52dip"
-                        android:layout_height="match_parent"
-                        android:padding="10dip"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/bili_player_back_button"/>
-
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:gravity="center_vertical"
-                        android:text="bilibili直播"
-                        android:textColor="@color/white"
-                        android:textSize="14dip"/>
-                </LinearLayout>
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="52dip"
+                            android:layout_height="match_parent"
+                            android:padding="10dip"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/bili_player_back_button"/>
+
+                        <TextView
+                            android:id="@+id/recommend_tv_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="bilibili直播"
+                            android:textColor="@color/white"
+                            android:textSize="14dip"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/recommend_layout_title_play"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:layout_width="20dip"
+                            android:layout_height="20dip"
+                            android:src="@drawable/ic_fab_play"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dip"
+                            android:gravity="center_vertical"
+                            android:text="立即播放"
+                            android:textColor="@color/white"
+                            android:textSize="14dip"/>
+                    </LinearLayout>
+
+                </RelativeLayout>
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -74,4 +119,16 @@
                 android:text="asdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsadds"/>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/recommend_fab_play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dip"
+        android:clickable="true"
+        android:src="@drawable/ic_fab_play"
+        app:backgroundTint="@color/pink"
+        app:fabSize="normal"
+        app:layout_anchor="@id/recommend_layout_appbar"
+        app:layout_anchorGravity="bottom|end"/>
 </android.support.design.widget.CoordinatorLayout>
