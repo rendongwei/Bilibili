@@ -26,6 +26,7 @@ import com.don.bilibili.model.HomeRecommend;
 import com.don.bilibili.model.RecommendDetail;
 import com.don.bilibili.service.SignService;
 import com.don.bilibili.utils.DisplayUtil;
+import com.don.bilibili.utils.ToastUtil;
 import com.don.bilibili.utils.Util;
 import com.don.bilibili.view.DiffuseView;
 import com.don.bilibili.view.media.BDCloudVideoView;
@@ -129,6 +130,9 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
 
             @Override
             public boolean onError(IMediaPlayer mp, int what, int extra) {
+                ToastUtil.showToast(mContext, "原地址播放失败,播放默认地址");
+                mBdCloudVideoView.setVideoPath(BackupUrl.ZHANQI);
+                mBdCloudVideoView.start();
                 return false;
             }
         });
@@ -288,7 +292,7 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
                 AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mLayoutToolBar.getLayoutParams();
                 params.setScrollFlags(0);
                 mLayoutAppBar.setExpanded(true);
-                mBdCloudVideoView.setVideoPath(BackupUrl.ZHANQI);
+                mBdCloudVideoView.setVideoPath("");
                 mBdCloudVideoView.start();
             }
 
