@@ -7,6 +7,7 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.widget.ImageView;
@@ -35,9 +36,15 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
 
     @Id(id = R.id.recommend_layout_appbar)
     private AppBarLayout mLayoutAppBar;
+    @Id(id = R.id.recommend_layout_toolbar)
+    private CollapsingToolbarLayout mLayoutToolBar;
+    @Id(id = R.id.recommend_iv_back)
+    @OnClick
+    private ImageView mIvBack;
     @Id(id = R.id.recommend_tv_title)
     private TextView mTvTitle;
     @Id(id = R.id.recommend_layout_title_play)
+    @OnClick
     private LinearLayout mLayoutTitlePlay;
     @Id(id = R.id.recommend_iv_image)
     private ImageView mIvImage;
@@ -64,7 +71,7 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
         mLayoutAppBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if (Math.abs(verticalOffset) >= appBarLayout.getTotalScrollRange()) {
+                if (Math.abs(verticalOffset) >= appBarLayout.getTotalScrollRange() && appBarLayout.getTotalScrollRange() != 0) {
                     mLayoutTitlePlay.setVisibility(View.VISIBLE);
                     mTvTitle.setVisibility(View.GONE);
                 } else {
@@ -96,7 +103,12 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.recommend_iv_back:
+                finish();
+                break;
+
             case R.id.recommend_fab_play:
+            case R.id.recommend_layout_title_play:
                 mIsClickFab = true;
                 mLayoutAppBar.setExpanded(true, true);
                 break;
@@ -196,6 +208,9 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
             @Override
             public void onAnimationEnd(Animator animator) {
                 mVRipple.setVisibility(View.GONE);
+                AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mLayoutToolBar.getLayoutParams();
+                params.setScrollFlags(0);
+                mLayoutAppBar.setExpanded(true);
             }
 
             @Override
