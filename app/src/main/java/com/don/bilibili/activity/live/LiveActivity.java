@@ -34,6 +34,7 @@ import com.don.bilibili.activity.base.TranslucentStatusBarActivity;
 import com.don.bilibili.adapter.TabAdapter;
 import com.don.bilibili.annotation.Id;
 import com.don.bilibili.annotation.OnClick;
+import com.don.bilibili.constants.BackupUrl;
 import com.don.bilibili.fragment.live.LiveDanmakuFragment;
 import com.don.bilibili.fragment.live.LiveGuardRankFragment;
 import com.don.bilibili.fragment.live.LiveRankFragment;
@@ -45,6 +46,7 @@ import com.don.bilibili.utils.DisplayUtil;
 import com.don.bilibili.utils.EmptyUtil;
 import com.don.bilibili.utils.EncryptUtil;
 import com.don.bilibili.utils.TimeUtil;
+import com.don.bilibili.utils.ToastUtil;
 import com.don.bilibili.utils.Util;
 import com.don.bilibili.view.CircularImageView;
 import com.don.bilibili.view.media.BDCloudVideoView;
@@ -231,12 +233,16 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
                     if (mPlayUrlPosition < mUrls.size() - 1) {
                         mPlayUrlPosition++;
                         String url = mUrls.get(mPlayUrlPosition);
-                        if (!EmptyUtil.isEmpty(url)){
+                        if (!EmptyUtil.isEmpty(url)) {
                             mBdCloudVideoView.setVideoPath(url);
                             mBdCloudVideoView.start();
+                            return false;
                         }
                     }
                 }
+                ToastUtil.showToast(mContext, "原地址播放失败,播放默认地址");
+                mBdCloudVideoView.setVideoPath(BackupUrl.ZHANQI);
+                mBdCloudVideoView.start();
                 return false;
             }
         });

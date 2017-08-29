@@ -299,7 +299,7 @@ public class BDCloudVideoView extends FrameLayout implements
 	 * 
 	 * @param bShow
 	 */
-	private void setCachingHintViewVisibility(boolean bShow) {
+	public void setCachingHintViewVisibility(boolean bShow) {
 		if (bShow) {
 			cachingHintViewRl.setVisibility(View.VISIBLE);
 		} else {

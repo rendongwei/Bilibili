@@ -14,10 +14,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.baidu.cloud.media.player.IMediaPlayer;
 import com.don.bilibili.R;
 import com.don.bilibili.activity.base.TranslucentStatusBarActivity;
 import com.don.bilibili.annotation.Id;
 import com.don.bilibili.annotation.OnClick;
+import com.don.bilibili.constants.BackupUrl;
 import com.don.bilibili.http.HttpManager;
 import com.don.bilibili.image.ImageManager;
 import com.don.bilibili.model.HomeRecommend;
@@ -26,6 +28,7 @@ import com.don.bilibili.service.SignService;
 import com.don.bilibili.utils.DisplayUtil;
 import com.don.bilibili.utils.Util;
 import com.don.bilibili.view.DiffuseView;
+import com.don.bilibili.view.media.BDCloudVideoView;
 
 import org.json.JSONObject;
 
@@ -47,6 +50,8 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
     @Id(id = R.id.recommend_layout_title_play)
     @OnClick
     private LinearLayout mLayoutTitlePlay;
+    @Id(id = R.id.recommend_v_display)
+    private BDCloudVideoView mBdCloudVideoView;
     @Id(id = R.id.recommend_iv_image)
     private ImageView mIvImage;
     @Id(id = R.id.recommend_v_ripple)
@@ -61,6 +66,30 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
 
     private boolean mIsClickFab;
     private AnimatorSet mAnimatorSet;
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if (mBdCloudVideoView != null) {
+            mBdCloudVideoView.enterForeground();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        if (mBdCloudVideoView != null) {
+            mBdCloudVideoView.enterBackground();
+        }
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mBdCloudVideoView != null) {
+            mBdCloudVideoView.stopPlayback();
+        }
+    }
 
     @Override
     protected int getContentView() {
@@ -84,6 +113,46 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
                 }
             }
         });
+        mBdCloudVideoView.setOnPreparedListener(new IMediaPlayer.OnPreparedListener() {
+
+            @Override
+            public void onPrepared(IMediaPlayer mp) {
+            }
+        });
+        mBdCloudVideoView.setOnCompletionListener(new IMediaPlayer.OnCompletionListener() {
+
+            @Override
+            public void onCompletion(IMediaPlayer mp) {
+            }
+        });
+        mBdCloudVideoView.setOnErrorListener(new IMediaPlayer.OnErrorListener() {
+
+            @Override
+            public boolean onError(IMediaPlayer mp, int what, int extra) {
+                return false;
+            }
+        });
+
+        mBdCloudVideoView.setOnInfoListener(new IMediaPlayer.OnInfoListener() {
+
+            @Override
+            public boolean onInfo(IMediaPlayer mp, int what, int extra) {
+                return false;
+            }
+        });
+        mBdCloudVideoView
+                .setOnBufferingUpdateListener(new IMediaPlayer.OnBufferingUpdateListener() {
+
+                    @Override
+                    public void onBufferingUpdate(IMediaPlayer mp, int percent) {
+                    }
+                });
+        mBdCloudVideoView.setOnPlayerStateListener(new BDCloudVideoView.OnPlayerStateListener() {
+
+            @Override
+            public void onPlayerStateChanged(BDCloudVideoView.PlayerState nowState) {
+            }
+        });
         setOnGetSignCallBack(new OnGetSignCallBack() {
             @Override
             public void callback(String method, String sign) {
@@ -97,6 +166,11 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
     @Override
     protected void init() {
         mRecommend = getIntent().getParcelableExtra("recommend");
+
+        BDCloudVideoView.setAK("ff8dde0b5ad14d4fa297749bb02a0256");
+        mBdCloudVideoView
+                .setVideoScalingMode(BDCloudVideoView.AR_ASPECT_WRAP_CONTENT);
+
         mTvTitle.setText("AV" + mRecommend.getAv().getParam());
         ImageManager.getInstance(mContext).showImage(mIvImage, mRecommend.getAv().getCover());
         getSign();
@@ -209,10 +283,13 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
 
             @Override
             public void onAnimationEnd(Animator animator) {
+                mIvImage.setVisibility(View.GONE);
                 mVRipple.setVisibility(View.GONE);
                 AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mLayoutToolBar.getLayoutParams();
                 params.setScrollFlags(0);
                 mLayoutAppBar.setExpanded(true);
+                mBdCloudVideoView.setVideoPath(BackupUrl.ZHANQI);
+                mBdCloudVideoView.start();
             }
 
             @Override
