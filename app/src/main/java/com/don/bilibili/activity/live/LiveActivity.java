@@ -135,6 +135,9 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
 
     private boolean mIsFullScreen = false;
     private boolean mAnimation = false;
+    private boolean mIsFinish = false;
+    private List<String> mUrls = new ArrayList<>();
+    private int mPlayUrlPosition = -1;
 
     private LiveDanmakuFragment mDanmakuFragment;
     private LiveRankFragment mRankFragment;
@@ -197,6 +200,7 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
         if (mMessageCall != null) {
             mMessageCall.cancel();
         }
+        mIsFinish = true;
     }
 
 
@@ -223,6 +227,16 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
 
             @Override
             public boolean onError(IMediaPlayer mp, int what, int extra) {
+                if (!EmptyUtil.isEmpty(mUrls)) {
+                    if (mPlayUrlPosition < mUrls.size() - 1) {
+                        mPlayUrlPosition++;
+                        String url = mUrls.get(mPlayUrlPosition);
+                        if (!EmptyUtil.isEmpty(url)){
+                            mBdCloudVideoView.setVideoPath(url);
+                            mBdCloudVideoView.start();
+                        }
+                    }
+                }
                 return false;
             }
         });
@@ -322,7 +336,7 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
 
         mLive = getIntent().getParcelableExtra("live");
 
-        BDCloudVideoView.setAK("");
+        BDCloudVideoView.setAK("ff8dde0b5ad14d4fa297749bb02a0256");
         mBdCloudVideoView
                 .setVideoScalingMode(BDCloudVideoView.AR_ASPECT_WRAP_CONTENT);
 
@@ -766,6 +780,12 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
                 JSONArray array = response.body().optJSONArray("durl");
                 if (array != null) {
                     String s = array.optJSONObject(0).optString("url");
+                    JSONArray urls = array.optJSONObject(0).optJSONArray("backup_url");
+                    if (urls != null) {
+                        for (int i = 0; i < urls.length(); i++) {
+                            mUrls.add(urls.optString(i));
+                        }
+                    }
                     if (!EmptyUtil.isEmpty(s)) {
                         mBdCloudVideoView.setVideoPath(s);
                         mBdCloudVideoView.start();
@@ -812,12 +832,14 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
                 mHandler.sendEmptyMessageDelayed(1, 300);
             }
         };
-        if (mMessageCall == null) {
-            mMessageCall = HttpManager.getInstance().getApiSevice().getUrl("http://api.live.bilibili.com/AppRoom/msg?_device=android&appkey=1d8b6e7d45233436&build=506000&mobi_app=android&platform=android&room_id=" + mLive.getRoomId() + "&ts=1499146112&sign=b5ff78c13763f307d7fbd3cb7b7b5467");
-        } else {
-            mMessageCall.cancel();
-            mMessageCall = mMessageCall.clone();
+        if (!mIsFinish) {
+            if (mMessageCall == null) {
+                mMessageCall = HttpManager.getInstance().getApiSevice().getUrl("http://api.live.bilibili.com/AppRoom/msg?_device=android&appkey=1d8b6e7d45233436&build=506000&mobi_app=android&platform=android&room_id=" + mLive.getRoomId() + "&ts=1499146112&sign=b5ff78c13763f307d7fbd3cb7b7b5467");
+            } else {
+                mMessageCall.cancel();
+                mMessageCall = mMessageCall.clone();
+            }
+            mMessageCall.enqueue(callback);
         }
-        mMessageCall.enqueue(callback);
     }
 }

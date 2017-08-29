@@ -23,6 +23,7 @@ import com.don.bilibili.image.ImageManager;
 import com.don.bilibili.model.HomeRecommend;
 import com.don.bilibili.model.RecommendDetail;
 import com.don.bilibili.service.SignService;
+import com.don.bilibili.utils.DisplayUtil;
 import com.don.bilibili.utils.Util;
 import com.don.bilibili.view.DiffuseView;
 
@@ -97,6 +98,7 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
     protected void init() {
         mRecommend = getIntent().getParcelableExtra("recommend");
         mTvTitle.setText("AV" + mRecommend.getAv().getParam());
+        ImageManager.getInstance(mContext).showImage(mIvImage, mRecommend.getAv().getCover());
         getSign();
     }
 
@@ -125,10 +127,10 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
         int width = mFabPlay.getWidth();
         int height = mFabPlay.getHeight();
 
-        mVRipple.setCenterX(mVRipple.getWidth() - width / 2);
-        mVRipple.setCenterY(mVRipple.getHeight() - height / 2);
+        mVRipple.setCenterX(mVRipple.getWidth() - width / 2 - DisplayUtil.dip2px(mContext, 8));
+        mVRipple.setCenterY(mVRipple.getHeight() - height / 2 - DisplayUtil.dip2px(mContext, 8));
 
-        int translationY = height / 2;
+        int translationY = height / 2 + DisplayUtil.dip2px(mContext, 8);
         ObjectAnimator translationAnimator = ObjectAnimator.ofFloat(mFabPlay, "translationY", 0, -translationY);
         translationAnimator.setDuration(300);
         translationAnimator.addListener(new Animator.AnimatorListener() {
@@ -252,7 +254,6 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
                     if (data != null) {
                         mRecommendDetail = new RecommendDetail();
                         mRecommendDetail.parse(data);
-                        ImageManager.getInstance(mContext).showImage(mIvImage, mRecommendDetail.getPic());
                     }
                 }
             }

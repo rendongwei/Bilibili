@@ -126,6 +126,7 @@
         android:id="@+id/recommend_fab_play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginRight="8dip"
         android:clickable="true"
         android:src="@drawable/ic_fab_play"
         app:backgroundTint="@color/pink"
