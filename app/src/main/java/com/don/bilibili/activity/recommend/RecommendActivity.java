@@ -1,5 +1,9 @@
 package com.don.bilibili.activity.recommend;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -19,6 +23,7 @@ import com.don.bilibili.model.HomeRecommend;
 import com.don.bilibili.model.RecommendDetail;
 import com.don.bilibili.service.SignService;
 import com.don.bilibili.utils.Util;
+import com.don.bilibili.view.DiffuseView;
 
 import org.json.JSONObject;
 
@@ -37,7 +42,7 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
     @Id(id = R.id.recommend_iv_image)
     private ImageView mIvImage;
     @Id(id = R.id.recommend_v_ripple)
-    private View mVRipple;
+    private DiffuseView mVRipple;
     @Id(id = R.id.recommend_fab_play)
     @OnClick
     private FloatingActionButton mFabPlay;
@@ -45,6 +50,9 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
     private HomeRecommend mRecommend;
     private String[] mTs;
     private RecommendDetail mRecommendDetail;
+
+    private boolean mIsClickFab;
+    private AnimatorSet mAnimatorSet;
 
     @Override
     protected int getContentView() {
@@ -62,6 +70,9 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
                 } else {
                     mLayoutTitlePlay.setVisibility(View.GONE);
                     mTvTitle.setVisibility(View.VISIBLE);
+                }
+                if (verticalOffset == 0 && mIsClickFab) {
+                    clickFab();
                 }
             }
         });
@@ -86,11 +97,118 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.recommend_fab_play:
-
+                mIsClickFab = true;
+                mLayoutAppBar.setExpanded(true, true);
                 break;
         }
     }
 
+    private void clickFab() {
+        mIsClickFab = false;
+        if (mAnimatorSet != null && mAnimatorSet.isRunning()) {
+            return;
+        }
+        mAnimatorSet = new AnimatorSet();
+
+        int width = mFabPlay.getWidth();
+        int height = mFabPlay.getHeight();
+
+        mVRipple.setCenterX(mVRipple.getWidth() - width / 2);
+        mVRipple.setCenterY(mVRipple.getHeight() - height / 2);
+
+        int translationY = height / 2;
+        ObjectAnimator translationAnimator = ObjectAnimator.ofFloat(mFabPlay, "translationY", 0, -translationY);
+        translationAnimator.setDuration(300);
+        translationAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+            }
+        });
+        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(mFabPlay, "alpha", 1, 0);
+        alphaAnimator.setDuration(300);
+        alphaAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                mFabPlay.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+            }
+        });
+
+        ValueAnimator rippleAnimator = ValueAnimator.ofInt(width,
+                (int) mVRipple.getMaxRadius());
+        rippleAnimator.setDuration(300);
+        rippleAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+                mVRipple.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+            }
+        });
+        rippleAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animator) {
+                int radius = Integer.parseInt(animator.getAnimatedValue()
+                        .toString());
+                mVRipple.setRadius(radius);
+            }
+        });
+        mAnimatorSet.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                mVRipple.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+            }
+        });
+        mAnimatorSet.play(translationAnimator).before(alphaAnimator).before(rippleAnimator);
+        mAnimatorSet.start();
+    }
 
     private void getSign() {
         mTs = Util.getTs();
