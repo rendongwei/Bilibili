@@ -21,13 +21,58 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <FrameLayout
+                android:id="@+id/recommend_layout_display"
                 android:layout_width="match_parent"
-                android:layout_height="200dip">
+                android:layout_height="200dip"
+                android:background="#000000">
 
-                <com.don.bilibili.view.media.BDCloudVideoView
-                    android:id="@+id/recommend_v_display"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent">
+
+                    <com.don.bilibili.view.media.BDCloudVideoView
+                        android:id="@+id/recommend_v_display"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+
+                    <LinearLayout
+                        android:id="@+id/recommend_layout_empty"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/recommend_layout_bottom"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dip"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/transparent_black80"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:id="@+id/recommend_iv_play"
+                            android:layout_width="52dip"
+                            android:layout_height="match_parent"
+                            android:padding="12dip"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/bili_player_play_can_pause"/>
+
+                        <View
+                            android:layout_width="0dip"
+                            android:layout_height="0dip"
+                            android:layout_weight="1"/>
+
+                        <ImageView
+                            android:id="@+id/recommend_iv_fullscreen"
+                            android:layout_width="52dip"
+                            android:layout_height="match_parent"
+                            android:padding="11dip"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/ic_portrait_fullscreen"/>
+                    </LinearLayout>
+                </RelativeLayout>
 
                 <ImageView
                     android:id="@+id/recommend_iv_image"
@@ -44,6 +89,7 @@
 
 
             <android.support.v7.widget.Toolbar
+                android:id="@+id/recommend_layout_top"
                 android:layout_width="match_parent"
                 android:layout_height="48dip"
                 app:contentInsetStart="0dip"
@@ -51,10 +97,10 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="48dip">
+                    android:layout_height="match_parent">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
@@ -69,13 +115,21 @@
 
                         <TextView
                             android:id="@+id/recommend_tv_title"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dip"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:gravity="center_vertical"
                             android:text="bilibili直播"
                             android:textColor="@color/white"
                             android:textSize="14dip"/>
 
+                        <ImageView
+                            android:id="@+id/recommend_iv_more"
+                            android:layout_width="52dip"
+                            android:layout_height="match_parent"
+                            android:padding="8dip"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/ic_action_more"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -101,7 +155,6 @@
                             android:textColor="@color/white"
                             android:textSize="14dip"/>
                     </LinearLayout>
-
                 </RelativeLayout>
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.CollapsingToolbarLayout>

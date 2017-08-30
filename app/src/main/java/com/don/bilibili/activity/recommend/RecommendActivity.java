@@ -5,11 +5,23 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GestureDetectorCompat;
+import android.support.v7.widget.Toolbar;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -37,12 +49,18 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.don.bilibili.utils.Util.toggleHideyBar;
+
 public class RecommendActivity extends TranslucentStatusBarActivity implements View.OnClickListener {
 
     @Id(id = R.id.recommend_layout_appbar)
     private AppBarLayout mLayoutAppBar;
     @Id(id = R.id.recommend_layout_toolbar)
     private CollapsingToolbarLayout mLayoutToolBar;
+    @Id(id = R.id.recommend_layout_display)
+    private FrameLayout mLayoutDisplay;
+    @Id(id = R.id.recommend_layout_top)
+    private Toolbar mLayoutTop;
     @Id(id = R.id.recommend_iv_back)
     @OnClick
     private ImageView mIvBack;
@@ -53,7 +71,18 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
     private LinearLayout mLayoutTitlePlay;
     @Id(id = R.id.recommend_v_display)
     private BDCloudVideoView mBdCloudVideoView;
+    @Id(id = R.id.recommend_layout_empty)
+    private LinearLayout mLayoutEmpty;
+    @Id(id = R.id.recommend_layout_bottom)
+    private LinearLayout mLayoutBottom;
+    @Id(id = R.id.recommend_iv_play)
+    @OnClick
+    private ImageView mIvPlay;
+    @Id(id = R.id.recommend_iv_fullscreen)
+    @OnClick
+    private ImageView mIvFullScreen;
     @Id(id = R.id.recommend_iv_image)
+    @OnClick
     private ImageView mIvImage;
     @Id(id = R.id.recommend_v_ripple)
     private DiffuseView mVRipple;
@@ -67,6 +96,14 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
 
     private boolean mIsClickFab;
     private AnimatorSet mAnimatorSet;
+    private GestureDetectorCompat mGestureDetectorCompat;
+    private boolean mIsFullScreen = false;
+    private boolean mAnimation = false;
+
+    @Override
+    public void onBackPressed() {
+        back();
+    }
 
     @Override
     protected void onRestart() {
@@ -104,9 +141,9 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 if (Math.abs(verticalOffset) >= appBarLayout.getTotalScrollRange() && appBarLayout.getTotalScrollRange() != 0) {
                     mLayoutTitlePlay.setVisibility(View.VISIBLE);
-                    mTvTitle.setVisibility(View.GONE);
+                    mTvTitle.setVisibility(View.INVISIBLE);
                 } else {
-                    mLayoutTitlePlay.setVisibility(View.GONE);
+                    mLayoutTitlePlay.setVisibility(View.INVISIBLE);
                     mTvTitle.setVisibility(View.VISIBLE);
                 }
                 if (verticalOffset == 0 && mIsClickFab) {
@@ -130,9 +167,13 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
 
             @Override
             public boolean onError(IMediaPlayer mp, int what, int extra) {
-                ToastUtil.showToast(mContext, "原地址播放失败,播放默认地址");
-                mBdCloudVideoView.setVideoPath(BackupUrl.ZHANQI);
-                mBdCloudVideoView.start();
+                if (!BackupUrl.ZHANQI.equals(mBdCloudVideoView.getCurrentPlayingUrl())) {
+                    ToastUtil.showToast(mContext, "原地址播放失败,播放默认地址");
+                    mBdCloudVideoView.setVideoPath(BackupUrl.ZHANQI);
+                    mBdCloudVideoView.start();
+                } else {
+                    ToastUtil.showToast(mContext, "默认地址播放失败");
+                }
                 return false;
             }
         });
@@ -157,6 +198,57 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
             public void onPlayerStateChanged(BDCloudVideoView.PlayerState nowState) {
             }
         });
+        mLayoutEmpty.setOnTouchListener(
+                new View.OnTouchListener() {
+
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        mHandler.removeMessages(0);
+                        return mGestureDetectorCompat.onTouchEvent(event);
+                    }
+                });
+        mGestureDetectorCompat = new GestureDetectorCompat(mContext,
+                new GestureDetector.OnGestureListener() {
+
+                    @Override
+                    public boolean onSingleTapUp(MotionEvent e) {
+                        mHandler.sendEmptyMessageDelayed(0, 3000);
+                        if (!mAnimation) {
+                            if (mLayoutTop.getVisibility() == View.VISIBLE
+                                    && mLayoutBottom.getVisibility() == View.VISIBLE) {
+                                dismiss();
+                            } else {
+                                show();
+                            }
+                        }
+                        return true;
+                    }
+
+                    @Override
+                    public void onShowPress(MotionEvent e) {
+                    }
+
+                    @Override
+                    public boolean onScroll(MotionEvent e1, MotionEvent e2,
+                                            float distanceX, float distanceY) {
+                        return true;
+                    }
+
+                    @Override
+                    public void onLongPress(MotionEvent e) {
+                    }
+
+                    @Override
+                    public boolean onFling(MotionEvent e1, MotionEvent e2,
+                                           float velocityX, float velocityY) {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onDown(MotionEvent e) {
+                        return true;
+                    }
+                });
         setOnGetSignCallBack(new OnGetSignCallBack() {
             @Override
             public void callback(String method, String sign) {
@@ -184,7 +276,47 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.recommend_iv_back:
-                finish();
+                back();
+                break;
+
+            case R.id.recommend_iv_more:
+
+                break;
+
+            case R.id.recommend_iv_play:
+                if (mBdCloudVideoView.isPlaying()) {
+                    mIvPlay.setImageResource(R.drawable.bili_player_play_can_play);
+                    mBdCloudVideoView.pause();
+                } else {
+                    mIvPlay.setImageResource(R.drawable.bili_player_play_can_pause);
+                    mBdCloudVideoView.start();
+                }
+                break;
+
+            case R.id.recommend_iv_fullscreen:
+                if (mIsFullScreen) {
+                    CollapsingToolbarLayout.LayoutParams params = new CollapsingToolbarLayout.LayoutParams(
+                            CollapsingToolbarLayout.LayoutParams.MATCH_PARENT,
+                            DisplayUtil.dip2px(mContext, 200));
+                    mLayoutDisplay.setLayoutParams(params);
+                    mBdCloudVideoView
+                            .setVideoScalingMode(BDCloudVideoView.AR_ASPECT_WRAP_CONTENT);
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                    toggleHideyBar(mActivity);
+                    changeStatusBarVisibility(View.VISIBLE);
+                    mIsFullScreen = false;
+                } else {
+                    CollapsingToolbarLayout.LayoutParams params = new CollapsingToolbarLayout.LayoutParams(
+                            CollapsingToolbarLayout.LayoutParams.MATCH_PARENT,
+                            CollapsingToolbarLayout.LayoutParams.MATCH_PARENT);
+                    mLayoutDisplay.setLayoutParams(params);
+                    mBdCloudVideoView
+                            .setVideoScalingMode(BDCloudVideoView.AR_ASPECT_FIT_PARENT);
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                    toggleHideyBar(mActivity);
+                    changeStatusBarVisibility(View.GONE);
+                    mIsFullScreen = true;
+                }
                 break;
 
             case R.id.recommend_fab_play:
@@ -192,6 +324,23 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
                 mIsClickFab = true;
                 mLayoutAppBar.setExpanded(true, true);
                 break;
+        }
+    }
+
+    private void back() {
+        if (mIsFullScreen) {
+            CollapsingToolbarLayout.LayoutParams params = new CollapsingToolbarLayout.LayoutParams(
+                    CollapsingToolbarLayout.LayoutParams.MATCH_PARENT, DisplayUtil.dip2px(
+                    mContext, 200));
+            mLayoutDisplay.setLayoutParams(params);
+            mBdCloudVideoView
+                    .setVideoScalingMode(BDCloudVideoView.AR_ASPECT_WRAP_CONTENT);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            toggleHideyBar(mActivity);
+            changeStatusBarVisibility(View.VISIBLE);
+            mIsFullScreen = false;
+        } else {
+            finish();
         }
     }
 
@@ -289,11 +438,17 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
             public void onAnimationEnd(Animator animator) {
                 mIvImage.setVisibility(View.GONE);
                 mVRipple.setVisibility(View.GONE);
+                mLayoutBottom.setVisibility(View.VISIBLE);
+                CollapsingToolbarLayout.LayoutParams layoutParams = (CollapsingToolbarLayout.LayoutParams) mLayoutTop.getLayoutParams();
+                layoutParams.height = DisplayUtil.dip2px(mContext, 40);
+                mLayoutTop.setLayoutParams(layoutParams);
+                mLayoutTop.setBackgroundColor(ContextCompat.getColor(mContext, R.color.transparent_black80));
                 AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) mLayoutToolBar.getLayoutParams();
                 params.setScrollFlags(0);
                 mLayoutAppBar.setExpanded(true);
                 mBdCloudVideoView.setVideoPath("");
                 mBdCloudVideoView.start();
+                mHandler.sendEmptyMessageDelayed(0, 3000);
             }
 
             @Override
@@ -307,6 +462,138 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
         mAnimatorSet.play(translationAnimator).before(alphaAnimator).before(rippleAnimator);
         mAnimatorSet.start();
     }
+
+    private void show() {
+        TranslateAnimation titleAnimation = getTopInAnimation(mLayoutTop);
+        TranslateAnimation contorllerAnimation = getBottomInAnimation(mLayoutBottom);
+        titleAnimation.setAnimationListener(new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+                mLayoutTop.setVisibility(View.VISIBLE);
+                mAnimation = true;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mAnimation = false;
+            }
+        });
+        contorllerAnimation.setAnimationListener(new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+                mLayoutBottom.setVisibility(View.VISIBLE);
+                mAnimation = true;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mAnimation = false;
+            }
+        });
+        mLayoutTop.startAnimation(titleAnimation);
+        mLayoutBottom.startAnimation(contorllerAnimation);
+    }
+
+    private void dismiss() {
+        TranslateAnimation titleAnimation = getTopOutAnimation(mLayoutTop);
+        TranslateAnimation contorllerAnimation = getBottomOutAnimation(mLayoutBottom);
+        titleAnimation.setAnimationListener(new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+                mAnimation = true;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mLayoutTop.setVisibility(View.GONE);
+                mAnimation = false;
+            }
+        });
+        contorllerAnimation.setAnimationListener(new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+                mAnimation = true;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mLayoutBottom.setVisibility(View.GONE);
+                mAnimation = false;
+            }
+        });
+        mLayoutTop.startAnimation(titleAnimation);
+        mLayoutBottom.startAnimation(contorllerAnimation);
+    }
+
+    private TranslateAnimation getTopInAnimation(ViewGroup top) {
+        TranslateAnimation translate = new TranslateAnimation(0f, 0f,
+                -top.getHeight(), 0f);
+        translate.setFillAfter(true);
+        translate.setDuration(500);
+        return translate;
+    }
+
+    private TranslateAnimation getTopOutAnimation(ViewGroup top) {
+        TranslateAnimation translate = new TranslateAnimation(0f, 0f, 0f,
+                -top.getHeight());
+        translate.setDuration(500);
+        return translate;
+    }
+
+    private TranslateAnimation getBottomInAnimation(ViewGroup bottom) {
+        TranslateAnimation translate = new TranslateAnimation(0f, 0f,
+                bottom.getHeight(), 0f);
+        translate.setFillAfter(true);
+        translate.setDuration(500);
+        return translate;
+    }
+
+    private TranslateAnimation getBottomOutAnimation(ViewGroup bottom) {
+        TranslateAnimation translate = new TranslateAnimation(0f, 0f, 0f,
+                bottom.getHeight());
+        translate.setDuration(500);
+        return translate;
+    }
+
+    private Handler mHandler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 0:
+                    if (!mAnimation) {
+                        if (mLayoutTop.getVisibility() == View.VISIBLE
+                                && mLayoutBottom.getVisibility() == View.VISIBLE) {
+                            dismiss();
+                        }
+                    }
+                    break;
+            }
+        }
+
+    };
 
     private void getSign() {
         mTs = Util.getTs();

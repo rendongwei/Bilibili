@@ -1,21 +1,17 @@
 package com.don.bilibili.activity.live;
 
-import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -71,6 +67,8 @@ import master.flame.danmaku.ui.widget.DanmakuView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.don.bilibili.utils.Util.toggleHideyBar;
 
 public class LiveActivity extends TranslucentStatusBarActivity implements View.OnClickListener {
 
@@ -240,9 +238,13 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
                         }
                     }
                 }
-                ToastUtil.showToast(mContext, "原地址播放失败,播放默认地址");
-                mBdCloudVideoView.setVideoPath(BackupUrl.ZHANQI);
-                mBdCloudVideoView.start();
+                if (!BackupUrl.ZHANQI.equals(mBdCloudVideoView.getCurrentPlayingUrl())) {
+                    ToastUtil.showToast(mContext, "原地址播放失败,播放默认地址");
+                    mBdCloudVideoView.setVideoPath(BackupUrl.ZHANQI);
+                    mBdCloudVideoView.start();
+                } else {
+                    ToastUtil.showToast(mContext, "默认地址播放失败");
+                }
                 return false;
             }
         });
@@ -441,37 +443,6 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
         }
     };
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public static void toggleHideyBar(Activity activity) {
-        if (Build.VERSION.SDK_INT < 11) {
-            return;
-        }
-        int uiOptions = activity.getWindow().getDecorView()
-                .getSystemUiVisibility();
-        int newUiOptions = uiOptions;
-        boolean isImmersiveModeEnabled = ((uiOptions | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY) == uiOptions);
-        if (isImmersiveModeEnabled) {
-            Log.i("live", "Turning immersive mode mode off. ");
-        } else {
-            Log.i("live", "Turning immersive mode mode on.");
-        }
-
-        // Navigation bar hiding: Backwards compatible to ICS.
-        if (Build.VERSION.SDK_INT >= 14) {
-            newUiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        }
-
-        // Status bar hiding: Backwards compatible to Jellybean
-        if (Build.VERSION.SDK_INT >= 16) {
-            newUiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
-        }
-        if (Build.VERSION.SDK_INT >= 18) {
-            newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-        }
-
-        activity.getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
-    }
-
     private Handler mHandler = new Handler() {
 
         @Override
@@ -504,7 +475,7 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
             mBdCloudVideoView
                     .setVideoScalingMode(BDCloudVideoView.AR_ASPECT_WRAP_CONTENT);
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            toggleHideyBar(mActivity);
+            Util.toggleHideyBar(mActivity);
             changeStatusBarVisibility(View.VISIBLE);
             mIsFullScreen = false;
         } else {

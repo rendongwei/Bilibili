@@ -1,5 +1,7 @@
 package com.don.bilibili.utils;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -9,9 +11,12 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.text.TextPaint;
+import android.util.Log;
+import android.view.View;
 
 import com.don.bilibili.R;
 
@@ -20,6 +25,37 @@ import java.util.Date;
 import java.util.Locale;
 
 public class Util {
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static void toggleHideyBar(Activity activity) {
+        if (Build.VERSION.SDK_INT < 11) {
+            return;
+        }
+        int uiOptions = activity.getWindow().getDecorView()
+                .getSystemUiVisibility();
+        int newUiOptions = uiOptions;
+        boolean isImmersiveModeEnabled = ((uiOptions | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY) == uiOptions);
+        if (isImmersiveModeEnabled) {
+            Log.i("live", "Turning immersive mode mode off. ");
+        } else {
+            Log.i("live", "Turning immersive mode mode on.");
+        }
+
+        // Navigation bar hiding: Backwards compatible to ICS.
+        if (Build.VERSION.SDK_INT >= 14) {
+            newUiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        }
+
+        // Status bar hiding: Backwards compatible to Jellybean
+        if (Build.VERSION.SDK_INT >= 16) {
+            newUiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
+        }
+        if (Build.VERSION.SDK_INT >= 18) {
+            newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        }
+
+        activity.getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
+    }
 
     public static String[] getTs() {
         long time = System.currentTimeMillis();
