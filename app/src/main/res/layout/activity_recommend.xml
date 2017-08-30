@@ -159,31 +159,43 @@
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.CollapsingToolbarLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="vertical"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
-
-            <android.support.design.widget.TabLayout
-                android:id="@+id/recommend_layout_tab"
-                android:layout_width="match_parent"
-                android:layout_height="40dip"
-                android:minHeight="40dip"
-                app:tabBackground="@drawable/bg_white20_selector"
-                app:tabIndicatorColor="@color/pink"
-                app:tabMode="scrollable"
-                app:tabSelectedTextColor="@color/pink"
-                app:tabTextColor="@color/black"/>
-        </LinearLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/recommend_vp_display"
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        android:fillViewport="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/recommend_layout_tab"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dip"
+                    android:minHeight="40dip"
+                    app:tabBackground="@drawable/bg_white20_selector"
+                    app:tabIndicatorColor="@color/pink"
+                    app:tabMode="scrollable"
+                    app:tabSelectedTextColor="@color/pink"
+                    app:tabTextColor="@color/black"/>
+            </LinearLayout>
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/recommend_vp_display"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
 
     <android.support.design.widget.FloatingActionButton
@@ -195,6 +207,6 @@
         android:src="@drawable/ic_fab_play"
         app:backgroundTint="@color/pink"
         app:fabSize="normal"
-        app:layout_anchor="@id/recommend_layout_toolbar"
+        app:layout_anchor="@id/recommend_layout_appbar"
         app:layout_anchorGravity="bottom|end"/>
 </android.support.design.widget.CoordinatorLayout>
