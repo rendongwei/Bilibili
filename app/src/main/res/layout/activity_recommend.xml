@@ -45,11 +45,11 @@
                     <LinearLayout
                         android:id="@+id/recommend_layout_bottom"
                         android:layout_width="match_parent"
-                        android:visibility="gone"
                         android:layout_height="40dip"
                         android:layout_alignParentBottom="true"
                         android:background="@color/transparent_black80"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="gone">
 
                         <ImageView
                             android:id="@+id/recommend_iv_play"
@@ -159,27 +159,32 @@
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.CollapsingToolbarLayout>
 
-    </android.support.design.widget.AppBarLayout>
-
-
-    <android.support.v4.widget.NestedScrollView
-        android:id="@+id/recommend_sv_content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:background="@color/white"
+            android:orientation="vertical"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-            <TextView
+            <android.support.design.widget.TabLayout
+                android:id="@+id/recommend_layout_tab"
                 android:layout_width="match_parent"
-                android:layout_height="1000dip"
-                android:background="#FF7812"
-                android:text="asdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsaddsasdsadsadsadsadsadsadsadasdsadds"/>
+                android:layout_height="40dip"
+                android:minHeight="40dip"
+                app:tabBackground="@drawable/bg_white20_selector"
+                app:tabIndicatorColor="@color/pink"
+                app:tabMode="scrollable"
+                app:tabSelectedTextColor="@color/pink"
+                app:tabTextColor="@color/black"/>
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/recommend_vp_display"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/recommend_fab_play"
@@ -190,6 +195,6 @@
         android:src="@drawable/ic_fab_play"
         app:backgroundTint="@color/pink"
         app:fabSize="normal"
-        app:layout_anchor="@id/recommend_layout_appbar"
+        app:layout_anchor="@id/recommend_layout_toolbar"
         app:layout_anchorGravity="bottom|end"/>
 </android.support.design.widget.CoordinatorLayout>

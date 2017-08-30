@@ -13,9 +13,11 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GestureDetectorCompat;
-import android.support.v4.widget.NestedScrollView;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -31,9 +33,12 @@ import android.widget.TextView;
 import com.baidu.cloud.media.player.IMediaPlayer;
 import com.don.bilibili.R;
 import com.don.bilibili.activity.base.TranslucentStatusBarActivity;
+import com.don.bilibili.adapter.TabAdapter;
 import com.don.bilibili.annotation.Id;
 import com.don.bilibili.annotation.OnClick;
 import com.don.bilibili.constants.BackupUrl;
+import com.don.bilibili.fragment.recommend.CommentFragment;
+import com.don.bilibili.fragment.recommend.SynopsisFragment;
 import com.don.bilibili.http.HttpManager;
 import com.don.bilibili.image.ImageManager;
 import com.don.bilibili.model.HomeRecommend;
@@ -46,6 +51,9 @@ import com.don.bilibili.view.DiffuseView;
 import com.don.bilibili.view.media.BDCloudVideoView;
 
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -88,8 +96,10 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
     private ImageView mIvImage;
     @Id(id = R.id.recommend_v_ripple)
     private DiffuseView mVRipple;
-    @Id(id = R.id.recommend_sv_content)
-    private NestedScrollView mSvContent;
+    @Id(id = R.id.recommend_layout_tab)
+    private TabLayout mLayoutTab;
+    @Id(id = R.id.recommend_vp_display)
+    private ViewPager mVpDisplay;
     @Id(id = R.id.recommend_fab_play)
     @OnClick
     private FloatingActionButton mFabPlay;
@@ -103,6 +113,9 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
     private GestureDetectorCompat mGestureDetectorCompat;
     private boolean mIsFullScreen = false;
     private boolean mAnimation = false;
+
+    private SynopsisFragment mSynopsisFragment;
+    private CommentFragment mCommentFragment;
 
     @Override
     public void onBackPressed() {
@@ -273,6 +286,17 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
 
         mTvTitle.setText("AV" + mRecommend.getAv().getParam());
         ImageManager.getInstance(mContext).showImage(mIvImage, mRecommend.getAv().getCover());
+
+        List<Fragment> mFragments = new ArrayList<Fragment>();
+        mSynopsisFragment = new SynopsisFragment();
+        mCommentFragment = new CommentFragment();
+        mFragments.add(mSynopsisFragment);
+        mFragments.add(mCommentFragment);
+        mVpDisplay.setOffscreenPageLimit(2);
+        mVpDisplay.setAdapter(new TabAdapter(getSupportFragmentManager(),
+                mFragments, "简介", "评论"));
+        mLayoutTab.setupWithViewPager(mVpDisplay);
+
         getSign();
     }
 
