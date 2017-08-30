@@ -11,9 +11,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GestureDetectorCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -86,6 +88,8 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
     private ImageView mIvImage;
     @Id(id = R.id.recommend_v_ripple)
     private DiffuseView mVRipple;
+    @Id(id = R.id.recommend_sv_content)
+    private NestedScrollView mSvContent;
     @Id(id = R.id.recommend_fab_play)
     @OnClick
     private FloatingActionButton mFabPlay;
@@ -295,6 +299,10 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
 
             case R.id.recommend_iv_fullscreen:
                 if (mIsFullScreen) {
+                    CoordinatorLayout.LayoutParams layoutParams = new CoordinatorLayout.LayoutParams(
+                            CollapsingToolbarLayout.LayoutParams.MATCH_PARENT,
+                            CollapsingToolbarLayout.LayoutParams.WRAP_CONTENT);
+                    mLayoutAppBar.setLayoutParams(layoutParams);
                     CollapsingToolbarLayout.LayoutParams params = new CollapsingToolbarLayout.LayoutParams(
                             CollapsingToolbarLayout.LayoutParams.MATCH_PARENT,
                             DisplayUtil.dip2px(mContext, 200));
@@ -306,6 +314,10 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
                     changeStatusBarVisibility(View.VISIBLE);
                     mIsFullScreen = false;
                 } else {
+                    CoordinatorLayout.LayoutParams layoutParams = new CoordinatorLayout.LayoutParams(
+                            CollapsingToolbarLayout.LayoutParams.MATCH_PARENT,
+                            CollapsingToolbarLayout.LayoutParams.MATCH_PARENT);
+                    mLayoutAppBar.setLayoutParams(layoutParams);
                     CollapsingToolbarLayout.LayoutParams params = new CollapsingToolbarLayout.LayoutParams(
                             CollapsingToolbarLayout.LayoutParams.MATCH_PARENT,
                             CollapsingToolbarLayout.LayoutParams.MATCH_PARENT);
@@ -329,6 +341,10 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
 
     private void back() {
         if (mIsFullScreen) {
+            CoordinatorLayout.LayoutParams layoutParams = new CoordinatorLayout.LayoutParams(
+                    CollapsingToolbarLayout.LayoutParams.MATCH_PARENT,
+                    CollapsingToolbarLayout.LayoutParams.WRAP_CONTENT);
+            mLayoutAppBar.setLayoutParams(layoutParams);
             CollapsingToolbarLayout.LayoutParams params = new CollapsingToolbarLayout.LayoutParams(
                     CollapsingToolbarLayout.LayoutParams.MATCH_PARENT, DisplayUtil.dip2px(
                     mContext, 200));
