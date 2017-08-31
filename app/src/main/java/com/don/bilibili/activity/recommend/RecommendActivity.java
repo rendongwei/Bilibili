@@ -4,9 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.AppBarLayout;
@@ -39,25 +37,15 @@ import com.don.bilibili.annotation.OnClick;
 import com.don.bilibili.constants.BackupUrl;
 import com.don.bilibili.fragment.recommend.CommentFragment;
 import com.don.bilibili.fragment.recommend.SynopsisFragment;
-import com.don.bilibili.http.HttpManager;
 import com.don.bilibili.image.ImageManager;
 import com.don.bilibili.model.HomeRecommend;
-import com.don.bilibili.model.RecommendDetail;
-import com.don.bilibili.service.SignService;
 import com.don.bilibili.utils.DisplayUtil;
 import com.don.bilibili.utils.ToastUtil;
-import com.don.bilibili.utils.Util;
 import com.don.bilibili.view.DiffuseView;
 import com.don.bilibili.view.media.BDCloudVideoView;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static com.don.bilibili.utils.Util.toggleHideyBar;
 
@@ -105,8 +93,6 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
     private FloatingActionButton mFabPlay;
 
     private HomeRecommend mRecommend;
-    private String[] mTs;
-    private RecommendDetail mRecommendDetail;
 
     private boolean mIsClickFab;
     private AnimatorSet mAnimatorSet;
@@ -270,7 +256,7 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
             @Override
             public void callback(String method, String sign) {
                 if ("https://app.bilibili.com/x/v2/view?".equals(method)) {
-                    getView(sign);
+                    mSynopsisFragment.getView(sign);
                 }
             }
         });
@@ -288,7 +274,7 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
         ImageManager.getInstance(mContext).showImage(mIvImage, mRecommend.getAv().getCover());
 
         List<Fragment> mFragments = new ArrayList<Fragment>();
-        mSynopsisFragment = new SynopsisFragment();
+        mSynopsisFragment = new SynopsisFragment(mRecommend);
         mCommentFragment = new CommentFragment();
         mFragments.add(mSynopsisFragment);
         mFragments.add(mCommentFragment);
@@ -296,8 +282,6 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
         mVpDisplay.setAdapter(new TabAdapter(getSupportFragmentManager(),
                 mFragments, "简介", "评论"));
         mLayoutTab.setupWithViewPager(mVpDisplay);
-
-        getSign();
     }
 
     @Override
@@ -635,41 +619,4 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
 
     };
 
-    private void getSign() {
-        mTs = Util.getTs();
-        Bundle bundle = new Bundle();
-        Intent intent = new Intent(mContext, SignService.class);
-        intent.putExtra("method", "https://app.bilibili.com/x/v2/view?");
-        bundle.putString("aid", mRecommend.getAv().getParam() + "");
-        bundle.putString("appkey", "1d8b6e7d45233436");
-        bundle.putString("build", "508000");
-        bundle.putString("mobi_app", "android");
-        bundle.putString("from", "7");
-        bundle.putString("plat", "0");
-        bundle.putString("platform", "android");
-        bundle.putString("ts", mTs[0]);
-        intent.putExtra("param", bundle);
-        mContext.startService(intent);
-    }
-
-    private void getView(String sign) {
-        Call<JSONObject> call = HttpManager.getInstance().getApiSevice().getUrl(sign);
-        call.enqueue(new Callback<JSONObject>() {
-            @Override
-            public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
-                if (response.body().optInt("code", -1) == 0) {
-                    JSONObject data = response.body().optJSONObject("data");
-                    if (data != null) {
-                        mRecommendDetail = new RecommendDetail();
-                        mRecommendDetail.parse(data);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<JSONObject> call, Throwable t) {
-
-            }
-        });
-    }
 }

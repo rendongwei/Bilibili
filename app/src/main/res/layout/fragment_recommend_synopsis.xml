@@ -2,16 +2,77 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="@color/background_gray"
               android:orientation="vertical">
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="100dip"
-        android:background="#F33F11"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="40dip"
-        android:background="#0233F2"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dip">
+
+            <TextView
+                android:id="@+id/recommend_synopsis_tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="14dip"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dip"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="20dip"
+                    android:layout_height="20dip"
+                    android:src="@drawable/ic_clip_view_num"/>
+
+                <TextView
+                    android:id="@+id/recommend_synopsis_tv_play_count"
+                    android:layout_width="40dip"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dip"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="0"
+                    android:textColor="@color/c_999999"
+                    android:textSize="12dip"/>
+
+                <ImageView
+                    android:layout_width="20dip"
+                    android:layout_height="20dip"
+                    android:layout_marginLeft="8dip"
+                    android:src="@drawable/ic_clip_danmaku_num"/>
+
+                <TextView
+                    android:id="@+id/recommend_synopsis_tv_danmaku_count"
+                    android:layout_width="40dip"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="4dip"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="0"
+                    android:textColor="@color/c_999999"
+                    android:textSize="12dip"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/recommend_synopsis_tv_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dip"
+                android:textColor="@color/c_999999"
+                android:textSize="12dip"/>
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>
