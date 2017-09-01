@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.media.AudioManager;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.TabLayout;
@@ -13,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.ViewPager;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -203,6 +205,23 @@ public class LiveActivity extends TranslucentStatusBarActivity implements View.O
         mIsFinish = true;
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        AudioManager mManager = null;
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_VOLUME_UP:
+                mManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                mManager.adjustStreamVolume(android.media.AudioManager.STREAM_MUSIC, AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
+                return true;
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+                mManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                mManager.adjustStreamVolume(android.media.AudioManager.STREAM_MUSIC, AudioManager.ADJUST_LOWER, android.media.AudioManager.FLAG_SHOW_UI);
+                return true;
+            default:
+                break;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
     @Override
     protected int getContentView() {

@@ -15,10 +15,12 @@ import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
 import android.text.util.Linkify;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.don.bilibili.R;
 import com.don.bilibili.annotation.Id;
+import com.don.bilibili.annotation.OnClick;
 import com.don.bilibili.fragment.base.BindFragment;
 import com.don.bilibili.http.HttpManager;
 import com.don.bilibili.model.HomeRecommend;
@@ -42,6 +44,26 @@ public class SynopsisFragment extends BindFragment {
     private TextView mTvDanmakuCount;
     @Id(id = R.id.recommend_synopsis_tv_content)
     private TextView mTvContent;
+    @Id(id = R.id.recommend_layout_share)
+    @OnClick
+    private LinearLayout mLayoutShare;
+    @Id(id = R.id.recommend_tv_share)
+    private TextView mTvShare;
+    @Id(id = R.id.recommend_layout_coin)
+    @OnClick
+    private LinearLayout mLayoutCoin;
+    @Id(id = R.id.recommend_tv_coin)
+    private TextView mTvCoin;
+    @Id(id = R.id.recommend_layout_collect)
+    @OnClick
+    private LinearLayout mLayoutCollect;
+    @Id(id = R.id.recommend_tv_collect)
+    private TextView mTvCollect;
+    @Id(id = R.id.recommend_layout_download)
+    @OnClick
+    private LinearLayout mLayoutDownload;
+    @Id(id = R.id.recommend_tv_download)
+    private TextView mTvDownload;
 
     private HomeRecommend mRecommend;
     private String[] mTs;
@@ -102,6 +124,9 @@ public class SynopsisFragment extends BindFragment {
                         mTvContent.setText(mRecommendDetail.getDesc());
                         interceptHyperLink(mTvContent);
                         removeHyperLinkUnderline(mTvContent);
+                        mTvShare.setText(mRecommendDetail.getStat().getShare() + "");
+                        mTvCoin.setText(mRecommendDetail.getStat().getCoin() + "");
+                        mTvCollect.setText(mRecommendDetail.getStat().getLike() + "");
                     }
                 }
             }

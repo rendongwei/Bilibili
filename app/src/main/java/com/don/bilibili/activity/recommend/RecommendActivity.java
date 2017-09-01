@@ -4,7 +4,9 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.media.AudioManager;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.AppBarLayout;
@@ -18,6 +20,7 @@ import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -130,6 +133,24 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
         if (mBdCloudVideoView != null) {
             mBdCloudVideoView.stopPlayback();
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        AudioManager mManager = null;
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_VOLUME_UP:
+                mManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                mManager.adjustStreamVolume(android.media.AudioManager.STREAM_MUSIC, AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
+                return true;
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+                mManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                mManager.adjustStreamVolume(android.media.AudioManager.STREAM_MUSIC, AudioManager.ADJUST_LOWER, android.media.AudioManager.FLAG_SHOW_UI);
+                return true;
+            default:
+                break;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
