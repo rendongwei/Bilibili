@@ -40,9 +40,12 @@ public class LiveGuardRankFragment extends BindFragment implements
 
     private String[] mTs;
 
-    public LiveGuardRankFragment(int id) {
-        super();
-        mId = id;
+    public static LiveGuardRankFragment newInstance(int id) {
+        LiveGuardRankFragment fragment = new LiveGuardRankFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("id", id);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
@@ -57,6 +60,7 @@ public class LiveGuardRankFragment extends BindFragment implements
 
     @Override
     protected void init() {
+        mId = getArguments().getInt("id");
         initRecyclerView();
         getSign();
     }

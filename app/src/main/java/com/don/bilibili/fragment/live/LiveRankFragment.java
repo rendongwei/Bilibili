@@ -1,5 +1,6 @@
 package com.don.bilibili.fragment.live;
 
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -27,9 +28,12 @@ public class LiveRankFragment extends BindFragment implements OnClickListener {
     private LiveRankLoveFragment mLoveFragment;
     private LiveRankFavoriteFragment mFavoriteFragment;
 
-    public LiveRankFragment(int id) {
-        super();
-        mId = id;
+    public static LiveRankFragment newInstance(int id) {
+        LiveRankFragment fragment = new LiveRankFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("id", id);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
@@ -44,10 +48,11 @@ public class LiveRankFragment extends BindFragment implements OnClickListener {
 
     @Override
     protected void init() {
+        mId = getArguments().getInt("id");
         List<Fragment> mFragments = new ArrayList<Fragment>();
-        mSevenDayFragment = new LiveRankSevenDayFragment(mId);
-        mLoveFragment = new LiveRankLoveFragment(mId);
-        mFavoriteFragment = new LiveRankFavoriteFragment(mId);
+        mSevenDayFragment = LiveRankSevenDayFragment.newInstance(mId);
+        mLoveFragment = LiveRankLoveFragment.newInstance(mId);
+        mFavoriteFragment = LiveRankFavoriteFragment.newInstance(mId);
         mFragments.add(mSevenDayFragment);
         mFragments.add(mLoveFragment);
         mFragments.add(mFavoriteFragment);

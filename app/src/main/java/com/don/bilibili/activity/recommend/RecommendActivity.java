@@ -295,7 +295,7 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
         ImageManager.getInstance(mContext).showImage(mIvImage, mRecommend.getAv().getCover());
 
         List<Fragment> mFragments = new ArrayList<Fragment>();
-        mSynopsisFragment = new SynopsisFragment(mRecommend);
+        mSynopsisFragment = SynopsisFragment.newInstance(mRecommend);
         mCommentFragment = new CommentFragment();
         mFragments.add(mSynopsisFragment);
         mFragments.add(mCommentFragment);

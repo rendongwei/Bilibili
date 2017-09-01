@@ -37,9 +37,12 @@ public class LiveRankSevenDayFragment extends BindFragment {
 
     private String[] mTs;
 
-    public LiveRankSevenDayFragment(int id) {
-        super();
-        mId = id;
+    public static LiveRankSevenDayFragment newInstance(int id) {
+        LiveRankSevenDayFragment fragment = new LiveRankSevenDayFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("id", id);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
@@ -54,6 +57,7 @@ public class LiveRankSevenDayFragment extends BindFragment {
 
     @Override
     protected void init() {
+        mId = getArguments().getInt("id");
         initRecyclerView();
         getSign();
     }

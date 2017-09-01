@@ -87,10 +87,6 @@ public class LiveFragment extends BindFragment implements View.OnClickListener {
     private List<HomeLiveCategory> mCategories = new ArrayList<HomeLiveCategory>();
     private HomeLiveCategoryAdapter mCategoryAdapter;
 
-    public LiveFragment() {
-
-    }
-
     @Override
     protected int getContentView() {
         return R.layout.fragment_home_live;

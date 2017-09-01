@@ -1,6 +1,7 @@
 package com.don.bilibili.fragment.live;
 
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -9,12 +10,12 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.don.bilibili.Json.Json;
-import com.don.bilibili.model.HomeLiveCategoryLive;
 import com.don.bilibili.R;
 import com.don.bilibili.adapter.LiveAllAdapter;
 import com.don.bilibili.annotation.Id;
 import com.don.bilibili.fragment.base.BindFragment;
 import com.don.bilibili.http.HttpManager;
+import com.don.bilibili.model.HomeLiveCategoryLive;
 import com.don.bilibili.utils.DisplayUtil;
 import com.don.bilibili.utils.EmptyUtil;
 import com.don.bilibili.utils.Util;
@@ -49,9 +50,12 @@ public class LiveAllFragment extends BindFragment {
     private int mPage = 1;
     private boolean mIsLoading = false;
 
-    public LiveAllFragment(int type) {
-        super();
-        mType = type;
+    public static LiveAllFragment newInstance(int type) {
+        LiveAllFragment fragment = new LiveAllFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("type", type);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
@@ -83,6 +87,7 @@ public class LiveAllFragment extends BindFragment {
 
     @Override
     protected void init() {
+        mType = getArguments().getInt("type");
         Util.initRefresh(mLayoutRefresh);
         initRecyclerView();
         mLayoutRefresh.setRefreshing(true);

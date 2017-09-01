@@ -38,9 +38,12 @@ public class LiveRankLoveFragment extends BindFragment {
 
     private String[] mTs;
 
-    public LiveRankLoveFragment(int id) {
-        super();
-        mId = id;
+    public static LiveRankLoveFragment newInstance(int id) {
+        LiveRankLoveFragment fragment = new LiveRankLoveFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("id", id);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
@@ -55,6 +58,7 @@ public class LiveRankLoveFragment extends BindFragment {
 
     @Override
     protected void init() {
+        mId = getArguments().getInt("id");
         initRecyclerView();
         getSign();
     }

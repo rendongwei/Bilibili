@@ -69,8 +69,12 @@ public class SynopsisFragment extends BindFragment {
     private String[] mTs;
     private RecommendDetail mRecommendDetail;
 
-    public SynopsisFragment(HomeRecommend recommend) {
-        mRecommend = recommend;
+    public static SynopsisFragment newInstance(HomeRecommend recommend) {
+        SynopsisFragment fragment = new SynopsisFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("recommend", recommend);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
@@ -85,6 +89,7 @@ public class SynopsisFragment extends BindFragment {
 
     @Override
     protected void init() {
+        mRecommend = getArguments().getParcelable("recommend");
         getSign();
     }
 

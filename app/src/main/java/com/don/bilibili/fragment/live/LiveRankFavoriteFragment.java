@@ -37,9 +37,12 @@ public class LiveRankFavoriteFragment extends BindFragment {
 
     private String[] mTs;
 
-    public LiveRankFavoriteFragment(int id) {
-        super();
-        mId = id;
+    public static LiveRankFavoriteFragment newInstance(int id) {
+        LiveRankFavoriteFragment fragment = new LiveRankFavoriteFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("id", id);
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
@@ -54,6 +57,7 @@ public class LiveRankFavoriteFragment extends BindFragment {
 
     @Override
     protected void init() {
+        mId = getArguments().getInt("id");
         initRecyclerView();
         getSign();
     }

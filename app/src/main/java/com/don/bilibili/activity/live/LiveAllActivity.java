@@ -44,10 +44,10 @@ public class LiveAllActivity extends TranslucentStatusBarActivity implements Vie
     protected void init() {
         List<Fragment> mFragments = new ArrayList<Fragment>();
 
-        mFragments.add(new LiveAllFragment(0));
-        mFragments.add(new LiveAllFragment(1));
-        mFragments.add(new LiveAllFragment(2));
-        mFragments.add(new LiveAllFragment(3));
+        mFragments.add(LiveAllFragment.newInstance(0));
+        mFragments.add(LiveAllFragment.newInstance(1));
+        mFragments.add(LiveAllFragment.newInstance(2));
+        mFragments.add(LiveAllFragment.newInstance(3));
 
         mVpDisplay.setAdapter(new TabAdapter(getSupportFragmentManager(),
                 mFragments, "推荐直播", "最热直播", "最新开播", "视频轮播"));
