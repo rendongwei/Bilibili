@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -92,6 +93,8 @@ public class SynopsisFragment extends BindFragment implements View.OnClickListen
     @Id(id = R.id.recommend_layout_tag_arrow)
     @OnClick
     private LinearLayout mLayoutTagArrow;
+    @Id(id = R.id.recommend_lv_display)
+    private RecyclerView mLvDisplay;
 
     private HomeRecommend mRecommend;
     private String[] mTs;
@@ -269,6 +272,11 @@ public class SynopsisFragment extends BindFragment implements View.OnClickListen
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mLayoutTag.getLayoutParams();
         params.height = height;
         mLayoutTag.setLayoutParams(params);
+        if (mLayoutTag.getChildCount() < 2) {
+            mLayoutTagArrow.setVisibility(View.GONE);
+        }else{
+            mLayoutTagArrow.setVisibility(View.VISIBLE);
+        }
     }
 
     private void interceptHyperLink(TextView tv) {
