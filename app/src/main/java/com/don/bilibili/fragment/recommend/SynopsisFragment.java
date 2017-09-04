@@ -243,6 +243,14 @@ public class SynopsisFragment extends BindFragment implements View.OnClickListen
         for (RecommendDetail.Tag tag : mRecommendDetail.getTags()) {
             TextView textView = (TextView) LayoutInflater.from(mContext).inflate(R.layout.include_recommend_tag, null);
             textView.setText(tag.getName());
+            textView.setTag(tag);
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    RecommendDetail.Tag t = (RecommendDetail.Tag) view.getTag();
+                    System.out.println(t.getName());
+                }
+            });
             textView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
             int newMargin = rowLayout.getChildCount() == 0 ? 0 : margin;
             LinearLayout.LayoutParams params =
