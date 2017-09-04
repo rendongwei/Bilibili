@@ -26,6 +26,8 @@ public class RecommendDetail extends Json {
     private Rights rights;
     private Owner owner;
     private Stat stat;
+    @Name(name = "tag")
+    private List<Tag> tags = new ArrayList<>();
     private List<Pages> pages = new ArrayList<>();
 
     public static class Rights extends Json {
@@ -117,6 +119,22 @@ public class RecommendDetail extends Json {
 
         public void setMid(int mid) {
             this.mid = mid;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getFace() {
+            return face;
+        }
+
+        public void setFace(String face) {
+            this.face = face;
         }
     }
 
@@ -218,6 +236,88 @@ public class RecommendDetail extends Json {
 
         public void setLike(int like) {
             this.like = like;
+        }
+    }
+
+    public static class Tag extends Json {
+        @Name(name = "tag_id")
+        private int id;
+        @Name(name = "tag_name")
+        private String name;
+        private String cover;
+        private int likes;
+        private int hates;
+        private int liked;
+        private int hated;
+        private int attribute;
+
+        @Override
+        public Object getEntity() {
+            return this;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getCover() {
+            return cover;
+        }
+
+        public void setCover(String cover) {
+            this.cover = cover;
+        }
+
+        public int getLikes() {
+            return likes;
+        }
+
+        public void setLikes(int likes) {
+            this.likes = likes;
+        }
+
+        public int getHates() {
+            return hates;
+        }
+
+        public void setHates(int hates) {
+            this.hates = hates;
+        }
+
+        public int getLiked() {
+            return liked;
+        }
+
+        public void setLiked(int liked) {
+            this.liked = liked;
+        }
+
+        public int getHated() {
+            return hated;
+        }
+
+        public void setHated(int hated) {
+            this.hated = hated;
+        }
+
+        public int getAttribute() {
+            return attribute;
+        }
+
+        public void setAttribute(int attribute) {
+            this.attribute = attribute;
         }
     }
 
@@ -356,7 +456,7 @@ public class RecommendDetail extends Json {
         private Stat stat;
 
 
-        public static class Owner extends  Json{
+        public static class Owner extends Json {
             private int mid;
             private String name;
             private String face;
@@ -677,6 +777,14 @@ public class RecommendDetail extends Json {
 
     public void setStat(Stat stat) {
         this.stat = stat;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 
     public List<Pages> getPages() {

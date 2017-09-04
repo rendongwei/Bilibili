@@ -1,5 +1,8 @@
 package com.don.bilibili.fragment.recommend;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -14,7 +17,9 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.URLSpan;
 import android.text.style.UnderlineSpan;
 import android.text.util.Linkify;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -23,18 +28,24 @@ import com.don.bilibili.annotation.Id;
 import com.don.bilibili.annotation.OnClick;
 import com.don.bilibili.fragment.base.BindFragment;
 import com.don.bilibili.http.HttpManager;
+import com.don.bilibili.image.ImageManager;
 import com.don.bilibili.model.HomeRecommend;
 import com.don.bilibili.model.RecommendDetail;
 import com.don.bilibili.service.SignService;
+import com.don.bilibili.utils.DisplayUtil;
+import com.don.bilibili.utils.TimeUtil;
 import com.don.bilibili.utils.Util;
+import com.don.bilibili.view.CircularImageView;
 
 import org.json.JSONObject;
+
+import java.text.DecimalFormat;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SynopsisFragment extends BindFragment {
+public class SynopsisFragment extends BindFragment implements View.OnClickListener {
 
     @Id(id = R.id.recommend_synopsis_tv_title)
     private TextView mTvTitle;
@@ -64,10 +75,30 @@ public class SynopsisFragment extends BindFragment {
     private LinearLayout mLayoutDownload;
     @Id(id = R.id.recommend_tv_download)
     private TextView mTvDownload;
+    @Id(id = R.id.recommend_iv_head)
+    private CircularImageView mIvHead;
+    @Id(id = R.id.recommend_tv_name)
+    private TextView mTvName;
+    @Id(id = R.id.recommend_tv_date)
+    private TextView mTvDate;
+    @Id(id = R.id.recommend_tv_follow)
+    @OnClick
+    private TextView mTvFollow;
+    @Id(id = R.id.recommend_tv_charge)
+    @OnClick
+    private TextView mTvCharge;
+    @Id(id = R.id.recommend_layout_tag)
+    private LinearLayout mLayoutTag;
+    @Id(id = R.id.recommend_layout_tag_arrow)
+    @OnClick
+    private LinearLayout mLayoutTagArrow;
 
     private HomeRecommend mRecommend;
     private String[] mTs;
     private RecommendDetail mRecommendDetail;
+
+    private AnimatorSet mAnimatorSet;
+    private boolean mIsTagOpen = false;
 
     public static SynopsisFragment newInstance(HomeRecommend recommend) {
         SynopsisFragment fragment = new SynopsisFragment();
@@ -91,6 +122,15 @@ public class SynopsisFragment extends BindFragment {
     protected void init() {
         mRecommend = getArguments().getParcelable("recommend");
         getSign();
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.recommend_layout_tag_arrow:
+                clickTagArrow();
+                break;
+        }
     }
 
     private void getSign() {
@@ -124,7 +164,15 @@ public class SynopsisFragment extends BindFragment {
                         mRecommendDetail = new RecommendDetail();
                         mRecommendDetail.parse(data);
                         mTvTitle.setText(mRecommendDetail.getTitle());
-                        mTvPlayCount.setText(mRecommendDetail.getStat().getView() + "");
+                        String count = "";
+                        DecimalFormat df = new DecimalFormat("0.##");
+                        if (mRecommendDetail.getStat().getView() > 10000) {
+                            double d = (double) mRecommendDetail.getStat().getView() / 10000d;
+                            count = df.format(d) + "万";
+                        } else {
+                            count = mRecommendDetail.getStat().getView() + "";
+                        }
+                        mTvPlayCount.setText(count);
                         mTvDanmakuCount.setText(mRecommendDetail.getStat().getDanmaku() + "");
                         mTvContent.setText(mRecommendDetail.getDesc());
                         interceptHyperLink(mTvContent);
@@ -132,6 +180,10 @@ public class SynopsisFragment extends BindFragment {
                         mTvShare.setText(mRecommendDetail.getStat().getShare() + "");
                         mTvCoin.setText(mRecommendDetail.getStat().getCoin() + "");
                         mTvCollect.setText(mRecommendDetail.getStat().getLike() + "");
+                        ImageManager.getInstance(mContext).showHead(mIvHead, mRecommendDetail.getOwner().getFace());
+                        mTvName.setText(mRecommendDetail.getOwner().getName());
+                        mTvDate.setText(TimeUtil.getDescriptionTimeFromTimestamp(mRecommendDetail.getPubdate() * 1000) + "投递");
+                        initTag();
                     }
                 }
             }
@@ -141,6 +193,82 @@ public class SynopsisFragment extends BindFragment {
 
             }
         });
+    }
+
+    private void clickTagArrow() {
+        if (mAnimatorSet != null && mAnimatorSet.isRunning()) {
+            return;
+        }
+        mAnimatorSet = new AnimatorSet();
+        int minHeight = DisplayUtil.dip2px(mContext, 30);
+        int maxHeight = minHeight * mLayoutTag.getChildCount() + (mLayoutTag.getChildCount() - 1) * DisplayUtil.dip2px(mContext, 8);
+        ObjectAnimator rotationAnimator = null;
+        ValueAnimator valueAnimator = null;
+        if (mIsTagOpen) {
+            rotationAnimator = ObjectAnimator.ofFloat(mLayoutTagArrow.getChildAt(0), "rotation", 0, 180);
+            valueAnimator = ValueAnimator.ofInt(maxHeight, minHeight);
+        } else {
+            rotationAnimator = ObjectAnimator.ofFloat(mLayoutTagArrow.getChildAt(0), "rotation", 180, 0);
+            valueAnimator = ValueAnimator.ofInt(minHeight, maxHeight);
+        }
+        mIsTagOpen = !mIsTagOpen;
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int height = Integer.parseInt(valueAnimator.getAnimatedValue()
+                        .toString());
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mLayoutTag.getLayoutParams();
+                params.height = height;
+                mLayoutTag.setLayoutParams(params);
+            }
+        });
+        mAnimatorSet.setDuration(300);
+        mAnimatorSet.playTogether(rotationAnimator, valueAnimator);
+        mAnimatorSet.start();
+    }
+
+    private void initTag() {
+        mLayoutTag.removeAllViews();
+        LinearLayout rowLayout = new LinearLayout(mContext);
+        LinearLayout.LayoutParams rowParams =
+                new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT);
+        rowLayout.setLayoutParams(rowParams);
+        int margin = DisplayUtil.dip2px(mContext, 8);
+        int height = DisplayUtil.dip2px(mContext, 30);
+        int maxWidth = mLayoutTag.getWidth();
+        for (RecommendDetail.Tag tag : mRecommendDetail.getTags()) {
+            TextView textView = (TextView) LayoutInflater.from(mContext).inflate(R.layout.include_recommend_tag, null);
+            textView.setText(tag.getName());
+            textView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            int newMargin = rowLayout.getChildCount() == 0 ? 0 : margin;
+            LinearLayout.LayoutParams params =
+                    new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                            height);
+            params.setMargins(newMargin, 0, 0, 0);
+            if (textView.getMeasuredWidth() + newMargin > maxWidth) {
+                mLayoutTag.addView(rowLayout);
+                rowLayout = new LinearLayout(mContext);
+                rowParams =
+                        new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                ViewGroup.LayoutParams.WRAP_CONTENT);
+                rowParams.setMargins(0, margin, 0, 0);
+                rowLayout.setLayoutParams(rowParams);
+                maxWidth = mLayoutTag.getWidth();
+                newMargin = 0;
+                maxWidth -= textView.getMeasuredWidth() + newMargin;
+                params.setMargins(0, 0, 0, 0);
+                rowLayout.addView(textView, params);
+            } else {
+                rowLayout.addView(textView, params);
+                maxWidth -= textView.getMeasuredWidth() + newMargin;
+            }
+        }
+        mLayoutTag.removeView(rowLayout);
+        mLayoutTag.addView(rowLayout);
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mLayoutTag.getLayoutParams();
+        params.height = height;
+        mLayoutTag.setLayoutParams(params);
     }
 
     private void interceptHyperLink(TextView tv) {
