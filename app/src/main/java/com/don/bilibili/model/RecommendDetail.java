@@ -29,6 +29,7 @@ public class RecommendDetail extends Json {
     @Name(name = "tag")
     private List<Tag> tags = new ArrayList<>();
     private List<Pages> pages = new ArrayList<>();
+    private List<Relates> relates = new ArrayList<>();
 
     public static class Rights extends Json {
         private int bp;
@@ -449,7 +450,7 @@ public class RecommendDetail extends Json {
 
     public static class Relates extends Json {
 
-        private int aid;
+        private String aid;
         private String pic;
         private String title;
         private Owner owner;
@@ -597,11 +598,11 @@ public class RecommendDetail extends Json {
             return this;
         }
 
-        public int getAid() {
+        public String getAid() {
             return aid;
         }
 
-        public void setAid(int aid) {
+        public void setAid(String aid) {
             this.aid = aid;
         }
 
@@ -793,5 +794,13 @@ public class RecommendDetail extends Json {
 
     public void setPages(List<Pages> pages) {
         this.pages = pages;
+    }
+
+    public List<Relates> getRelates() {
+        return relates;
+    }
+
+    public void setRelates(List<Relates> relates) {
+        this.relates = relates;
     }
 }

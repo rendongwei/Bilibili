@@ -151,7 +151,8 @@ public class HomeRecommendAdapter extends
             HomeRecommend recommend = mRecommends.get(getAdapterPosition());
             if (recommend.getType() == HomeRecommend.Type.AV) {
                 Intent intent = new Intent(mContext, RecommendActivity.class);
-                intent.putExtra("recommend", recommend);
+                intent.putExtra("aid", recommend.getAv().getParam());
+                intent.putExtra("cover", recommend.getAv().getCover());
                 mContext.startActivity(intent);
             }
         }

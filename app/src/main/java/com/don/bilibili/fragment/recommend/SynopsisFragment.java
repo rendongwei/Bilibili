@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -25,12 +26,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.don.bilibili.R;
+import com.don.bilibili.adapter.RecommendDetailAdapter;
 import com.don.bilibili.annotation.Id;
 import com.don.bilibili.annotation.OnClick;
 import com.don.bilibili.fragment.base.BindFragment;
 import com.don.bilibili.http.HttpManager;
 import com.don.bilibili.image.ImageManager;
-import com.don.bilibili.model.HomeRecommend;
 import com.don.bilibili.model.RecommendDetail;
 import com.don.bilibili.service.SignService;
 import com.don.bilibili.utils.DisplayUtil;
@@ -96,17 +97,17 @@ public class SynopsisFragment extends BindFragment implements View.OnClickListen
     @Id(id = R.id.recommend_lv_display)
     private RecyclerView mLvDisplay;
 
-    private HomeRecommend mRecommend;
+    private String mAid;
     private String[] mTs;
     private RecommendDetail mRecommendDetail;
 
     private AnimatorSet mAnimatorSet;
     private boolean mIsTagOpen = false;
 
-    public static SynopsisFragment newInstance(HomeRecommend recommend) {
+    public static SynopsisFragment newInstance(String aid) {
         SynopsisFragment fragment = new SynopsisFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable("recommend", recommend);
+        bundle.putString("aid", aid);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -123,7 +124,8 @@ public class SynopsisFragment extends BindFragment implements View.OnClickListen
 
     @Override
     protected void init() {
-        mRecommend = getArguments().getParcelable("recommend");
+        mAid = getArguments().getString("aid");
+        initRecyclerView();
         getSign();
     }
 
@@ -136,12 +138,21 @@ public class SynopsisFragment extends BindFragment implements View.OnClickListen
         }
     }
 
+    private void initRecyclerView() {
+        mLvDisplay.setNestedScrollingEnabled(false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        layoutManager.setAutoMeasureEnabled(true);
+        layoutManager.setSmoothScrollbarEnabled(true);
+        mLvDisplay.setLayoutManager(layoutManager);
+    }
+
     private void getSign() {
         mTs = Util.getTs();
         Bundle bundle = new Bundle();
         Intent intent = new Intent(mContext, SignService.class);
         intent.putExtra("method", "https://app.bilibili.com/x/v2/view?");
-        bundle.putString("aid", mRecommend.getAv().getParam() + "");
+        bundle.putString("aid", mAid);
         bundle.putString("appkey", "1d8b6e7d45233436");
         bundle.putString("build", "508000");
         bundle.putString("mobi_app", "android");
@@ -187,6 +198,7 @@ public class SynopsisFragment extends BindFragment implements View.OnClickListen
                         mTvName.setText(mRecommendDetail.getOwner().getName());
                         mTvDate.setText(TimeUtil.getDescriptionTimeFromTimestamp(mRecommendDetail.getPubdate() * 1000) + "投递");
                         initTag();
+                        mLvDisplay.setAdapter(new RecommendDetailAdapter(mContext, mRecommendDetail.getRelates()));
                     }
                 }
             }
@@ -282,7 +294,7 @@ public class SynopsisFragment extends BindFragment implements View.OnClickListen
         mLayoutTag.setLayoutParams(params);
         if (mLayoutTag.getChildCount() < 2) {
             mLayoutTagArrow.setVisibility(View.GONE);
-        }else{
+        } else {
             mLayoutTagArrow.setVisibility(View.VISIBLE);
         }
     }

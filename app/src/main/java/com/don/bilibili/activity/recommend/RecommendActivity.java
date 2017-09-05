@@ -41,7 +41,6 @@ import com.don.bilibili.constants.BackupUrl;
 import com.don.bilibili.fragment.recommend.CommentFragment;
 import com.don.bilibili.fragment.recommend.SynopsisFragment;
 import com.don.bilibili.image.ImageManager;
-import com.don.bilibili.model.HomeRecommend;
 import com.don.bilibili.utils.DisplayUtil;
 import com.don.bilibili.utils.ToastUtil;
 import com.don.bilibili.view.DiffuseView;
@@ -95,7 +94,8 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
     @OnClick
     private FloatingActionButton mFabPlay;
 
-    private HomeRecommend mRecommend;
+    private String mAid;
+    private String mCover;
 
     private boolean mIsClickFab;
     private AnimatorSet mAnimatorSet;
@@ -285,17 +285,18 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
 
     @Override
     protected void init() {
-        mRecommend = getIntent().getParcelableExtra("recommend");
+        mAid = getIntent().getStringExtra("aid");
+        mCover = getIntent().getStringExtra("cover");
 
         BDCloudVideoView.setAK("ff8dde0b5ad14d4fa297749bb02a0256");
         mBdCloudVideoView
                 .setVideoScalingMode(BDCloudVideoView.AR_ASPECT_WRAP_CONTENT);
 
-        mTvTitle.setText("AV" + mRecommend.getAv().getParam());
-        ImageManager.getInstance(mContext).showImage(mIvImage, mRecommend.getAv().getCover());
+        mTvTitle.setText("AV" + mAid);
+        ImageManager.getInstance(mContext).showImage(mIvImage, mCover);
 
         List<Fragment> mFragments = new ArrayList<Fragment>();
-        mSynopsisFragment = SynopsisFragment.newInstance(mRecommend);
+        mSynopsisFragment = SynopsisFragment.newInstance(mAid);
         mCommentFragment = new CommentFragment();
         mFragments.add(mSynopsisFragment);
         mFragments.add(mCommentFragment);
