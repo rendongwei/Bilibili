@@ -279,6 +279,9 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
                 if ("https://app.bilibili.com/x/v2/view?".equals(method)) {
                     mSynopsisFragment.getView(sign);
                 }
+                if ("https://api.bilibili.com/x/v2/reply?".equals(method)) {
+                    mCommentFragment.getComment(sign);
+                }
             }
         });
     }
@@ -297,7 +300,7 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
 
         List<Fragment> mFragments = new ArrayList<Fragment>();
         mSynopsisFragment = SynopsisFragment.newInstance(mAid);
-        mCommentFragment = new CommentFragment();
+        mCommentFragment = CommentFragment.newInstance(mAid);
         mFragments.add(mSynopsisFragment);
         mFragments.add(mCommentFragment);
         mVpDisplay.setOffscreenPageLimit(2);

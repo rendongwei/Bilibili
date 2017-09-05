@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:fillViewport="true">
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="100dip"
-        android:background="#1FF011"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recommend_comment_lv_display"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </android.support.v7.widget.RecyclerView>
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="40dip"
-        android:background="#0123FF"/>
-
-</LinearLayout>
+</android.support.v4.widget.NestedScrollView>
