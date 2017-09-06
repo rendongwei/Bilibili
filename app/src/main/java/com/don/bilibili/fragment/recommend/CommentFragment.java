@@ -2,17 +2,24 @@ package com.don.bilibili.fragment.recommend;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.don.bilibili.R;
+import com.don.bilibili.adapter.RecommendCommentAdapter;
 import com.don.bilibili.annotation.Id;
 import com.don.bilibili.fragment.base.BindFragment;
 import com.don.bilibili.http.HttpManager;
+import com.don.bilibili.model.RecommendComment;
+import com.don.bilibili.model.RecommendCommentItem;
 import com.don.bilibili.service.SignService;
 import com.don.bilibili.utils.Util;
 
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -20,6 +27,8 @@ import retrofit2.Response;
 
 public class CommentFragment extends BindFragment {
 
+    @Id(id = R.id.recommend_comment_layout_scroll)
+    private NestedScrollView mLayoutScroll;
     @Id(id = R.id.recommend_comment_lv_display)
     private RecyclerView mLvDisplay;
 
@@ -27,6 +36,10 @@ public class CommentFragment extends BindFragment {
     private String[] mTs;
     private int mPage = 1;
     private boolean mIsLoading = false;
+    private List<RecommendCommentItem> mComments = new ArrayList<>();
+    private int mHotCount;
+    private int mTitleCount;
+    private RecommendCommentAdapter mAdapter;
 
     public static CommentFragment newInstance(String aid) {
         CommentFragment fragment = new CommentFragment();
@@ -43,7 +56,17 @@ public class CommentFragment extends BindFragment {
 
     @Override
     protected void bindListener() {
+        mLayoutScroll.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
 
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX,
+                                       int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v
+                        .getMeasuredHeight())) {
+                    getSign();
+                }
+            }
+        });
     }
 
     @Override
@@ -63,6 +86,10 @@ public class CommentFragment extends BindFragment {
     }
 
     private void getSign() {
+        if (mIsLoading) {
+            return;
+        }
+        mIsLoading = true;
         mTs = Util.getTs();
         Bundle bundle = new Bundle();
         Intent intent = new Intent(mContext, SignService.class);
@@ -94,13 +121,40 @@ public class CommentFragment extends BindFragment {
             @Override
             public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
                 if (response.body().optInt("code", -1) == 0) {
-
+                    RecommendComment comment = new RecommendComment();
+                    comment.parse(response.body().optJSONObject("data"));
+                    if (mPage == 1) {
+                        mTitleCount = comment.getHots().size() + comment.getUpper().getTop().size();
+                        mHotCount = comment.getHots().size();
+                        for (RecommendComment.Comment c : comment.getUpper().getTop()) {
+                            RecommendCommentItem item = new RecommendCommentItem(false, true, c);
+                            mComments.add(item);
+                        }
+                        for (RecommendComment.Comment c : comment.getHots()) {
+                            RecommendCommentItem item = new RecommendCommentItem(true, false, c);
+                            mComments.add(item);
+                        }
+                    }
+                    for (RecommendComment.Comment c : comment.getReplies()) {
+                        RecommendCommentItem item = new RecommendCommentItem(false, false, c);
+                        mComments.add(item);
+                    }
+                    if (mPage == 1) {
+                        mAdapter = new RecommendCommentAdapter(mContext, mComments, mHotCount, mTitleCount);
+                        mLvDisplay.setAdapter(mAdapter);
+                    } else {
+                        int itemCount = comment.getReplies().size();
+                        int positionStart = mComments.size();
+                        mAdapter.notifyItemRangeInserted(positionStart, itemCount);
+                    }
+                    mPage++;
                 }
+                mIsLoading = false;
             }
 
             @Override
             public void onFailure(Call<JSONObject> call, Throwable t) {
-
+                mIsLoading = false;
             }
         });
     }

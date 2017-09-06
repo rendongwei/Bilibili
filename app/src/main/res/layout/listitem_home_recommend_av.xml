@@ -132,8 +132,8 @@
 
                     <ImageView
                         android:id="@+id/listitem_home_recommend_av_iv_more"
-                        android:layout_width="15dip"
-                        android:layout_height="15dip"
+                        android:layout_width="12dip"
+                        android:layout_height="12dip"
                         android:src="@drawable/ic_promo_index_more_v2" />
                 </LinearLayout>
             </LinearLayout>
