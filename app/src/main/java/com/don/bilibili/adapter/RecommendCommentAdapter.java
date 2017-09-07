@@ -1,7 +1,10 @@
 package com.don.bilibili.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +16,9 @@ import com.don.bilibili.image.ImageManager;
 import com.don.bilibili.model.RecommendComment;
 import com.don.bilibili.model.RecommendCommentItem;
 import com.don.bilibili.utils.TimeUtil;
+import com.don.bilibili.utils.Util;
 import com.don.bilibili.view.CircularImageView;
+import com.don.bilibili.view.VerticalCenterImageSpan;
 
 import java.util.List;
 
@@ -61,10 +66,46 @@ public class RecommendCommentAdapter extends RecyclerView.Adapter<RecyclerView.V
         if (holder instanceof ItemViewHolder) {
             ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
             ImageManager.getInstance(mContext).showHead(itemViewHolder.mIvHead, comment.getMember().getAvatar());
-            itemViewHolder.mTvName.setText(comment.getMember().getUname());
+            commentItem.setTop(true);
+            if (commentItem.isTop()) {
+                SpannableString spannableString = null;
+                Bitmap labelBitmap = null;
+                Bitmap levelBitmap = null;
+                String name = "  " + comment.getMember().getUname() + "  ";
+                labelBitmap = Util.createRecommendCommentLabel(mContext, "UP");
+                levelBitmap = Util.createRecommendCommentLevel(mContext, comment.getMember().getLevelInfo().getCurrentLevel());
+                spannableString = new SpannableString(name);
+                spannableString.setSpan(new VerticalCenterImageSpan(mContext,
+                                labelBitmap), 0, 1,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannableString.setSpan(new VerticalCenterImageSpan(mContext,
+                                levelBitmap), name.length() - 1, name.length(),
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                itemViewHolder.mTvName.setText(spannableString);
+
+
+                String content = "  " + comment.getContent().getMessage();
+                labelBitmap = Util.createRecommendCommentLabel(mContext, "置顶");
+                spannableString = new SpannableString(content);
+                spannableString.setSpan(new VerticalCenterImageSpan(mContext,
+                                labelBitmap), 0, 1,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                itemViewHolder.mTvContent.setText(spannableString);
+            } else {
+                SpannableString spannableString = null;
+                Bitmap levelBitmap = null;
+                String name = comment.getMember().getUname() + "  ";
+                levelBitmap = Util.createRecommendCommentLevel(mContext, comment.getMember().getLevelInfo().getCurrentLevel());
+                spannableString = new SpannableString(name);
+                spannableString.setSpan(new VerticalCenterImageSpan(mContext,
+                                levelBitmap), name.length() - 1, name.length(),
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                itemViewHolder.mTvName.setText(spannableString);
+
+                itemViewHolder.mTvContent.setText(comment.getContent().getMessage());
+            }
             itemViewHolder.mTvFloor.setText("#" + comment.getFloor());
             itemViewHolder.mTvTime.setText(TimeUtil.getDescriptionTimeFromTimestamp(comment.getCtime() * 1000));
-            itemViewHolder.mTvContent.setText(comment.getContent().getMessage());
             itemViewHolder.mTvComment.setText(comment.getRcount() == 0 ? "" : comment.getRcount() + "");
         }
     }

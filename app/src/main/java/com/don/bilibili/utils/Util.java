@@ -12,6 +12,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.text.TextPaint;
@@ -254,6 +255,90 @@ public class Util {
         float y = height / 2 - (fontMetricsInt.bottom - fontMetricsInt.top) / 2
                 - fontMetricsInt.top;
         canvas.drawText(levelName, x, y, paint);
+
+        return bitmap;
+    }
+
+    public static Bitmap createRecommendCommentLabel(Context context, String label) {
+
+        int dip4 = DisplayUtil.dip2px(context, 4);
+        int dip8 = DisplayUtil.dip2px(context, 8);
+        int dip15 = DisplayUtil.dip2px(context, 15);
+        int dip20 = DisplayUtil.dip2px(context, 20);
+
+        TextPaint textPaint = new TextPaint();
+        textPaint.setTextSize(dip8);
+        Paint.FontMetricsInt fontMetricsInt = textPaint.getFontMetricsInt();
+        int width = dip20;
+        int height = dip15;
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        // 背景
+        RectF rectF = new RectF(0, 0, width, height);
+        paint.setColor(ContextCompat.getColor(context, R.color.pink));
+        paint.setStrokeWidth(1);
+        canvas.drawRoundRect(rectF, dip4, dip4, paint);
+
+        rectF = new RectF(1, 1, width - 1, height - 1);
+        paint.setColor(Color.WHITE);
+        canvas.drawRoundRect(rectF, dip4, dip4, paint);
+        // level
+        float nameLength = textPaint.measureText(label);
+        paint.setTextSize(dip8);
+        paint.setColor(ContextCompat.getColor(context, R.color.pink));
+        float x = width / 2 - nameLength / 2;
+        float y = height / 2 - (fontMetricsInt.bottom - fontMetricsInt.top) / 2
+                - fontMetricsInt.top;
+        canvas.drawText(label, x, y, paint);
+
+        return bitmap;
+    }
+
+    public static Bitmap createRecommendCommentLevel(Context context, int level) {
+
+        int dip1 = DisplayUtil.dip2px(context, 1);
+        int dip2 = DisplayUtil.dip2px(context, 2);
+        int dip8 = DisplayUtil.dip2px(context, 8);
+        int dip10 = DisplayUtil.dip2px(context, 10);
+        int dip12 = DisplayUtil.dip2px(context, 12);
+
+        TextPaint lvTextPaint = new TextPaint();
+        lvTextPaint.setTextSize(dip8);
+        Paint.FontMetricsInt lvFontMetricsInt = lvTextPaint.getFontMetricsInt();
+        int lvWidth = (int) lvTextPaint.measureText("LV") + dip2;
+        int lvHeight = Math.abs(lvFontMetricsInt.bottom - lvFontMetricsInt.top);
+
+        TextPaint levelTextPaint = new TextPaint();
+        levelTextPaint.setTextSize(dip10);
+        Paint.FontMetricsInt levelFontMetricsInt = levelTextPaint.getFontMetricsInt();
+        int levelWidth = (int) levelTextPaint.measureText(level + "") + dip2;
+        int levelHeight = Math.abs(levelFontMetricsInt.bottom - levelFontMetricsInt.top);
+
+        int width = lvWidth + levelWidth;
+        int height = Math.max(lvHeight, levelHeight);
+
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+        RectF rectF = new RectF(0, Math.abs(lvHeight - levelHeight), lvWidth, Math.abs(lvHeight - levelHeight) + lvHeight);
+        paint.setColor(Color.parseColor("#FFB37C"));
+        canvas.drawRect(rectF, paint);
+        rectF = new RectF(lvWidth, 0, width, height);
+        canvas.drawRect(rectF, paint);
+
+        paint.setTextSize(dip8);
+        paint.setColor(Color.WHITE);
+        float x = dip1;
+        float y = height / 2 - lvFontMetricsInt.descent + (lvFontMetricsInt.descent - lvFontMetricsInt.ascent) / 2 + Math.abs(lvHeight - levelHeight);
+        canvas.drawText("LV", x, y, paint);
+
+        paint.setTextSize(dip12);
+        paint.setColor(Color.WHITE);
+        x = lvWidth + dip1 / 2;
+        y = height / 2 - lvFontMetricsInt.descent + levelHeight / 2;
+        canvas.drawText(level + "", x, y, paint);
 
         return bitmap;
     }
