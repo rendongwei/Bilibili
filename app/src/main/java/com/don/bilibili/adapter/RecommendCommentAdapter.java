@@ -38,12 +38,14 @@ public class RecommendCommentAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public int getItemCount() {
-//        return mHotCount > 0 ? mComments.size() + 1 : mComments.size();
-        return mComments.size();
+        return mHotCount > 0 ? mComments.size() + 1 : mComments.size();
     }
 
     @Override
     public int getItemViewType(int position) {
+        if (mHotCount > 0 && position == mTitleCount) {
+            return 1;
+        }
         return 0;
     }
 
@@ -56,17 +58,35 @@ public class RecommendCommentAdapter extends RecyclerView.Adapter<RecyclerView.V
                     R.layout.listitem_recommend_comment, parent, false);
             holder = new ItemViewHolder(view);
         }
+        if (viewType == 1) {
+            view = LayoutInflater.from(mContext).inflate(
+                    R.layout.listitem_recommend_comment_more_hot, parent, false);
+            holder = new MoreItemView(view);
+        }
+
         return holder;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        RecommendCommentItem commentItem = mComments.get(position);
-        RecommendComment.Comment comment = commentItem.getComment();
+        RecommendCommentItem commentItem = null;
+        if (mHotCount > 0) {
+            if (position < mTitleCount) {
+                commentItem = mComments.get(position);
+            }
+            if (position > mTitleCount) {
+                commentItem = mComments.get(position - 1);
+            }
+        } else {
+            commentItem = mComments.get(position);
+        }
+        RecommendComment.Comment comment = commentItem == null ? null : commentItem.getComment();
+        if (comment == null) {
+            return;
+        }
         if (holder instanceof ItemViewHolder) {
             ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
             ImageManager.getInstance(mContext).showHead(itemViewHolder.mIvHead, comment.getMember().getAvatar());
-            commentItem.setTop(true);
             if (commentItem.isTop()) {
                 SpannableString spannableString = null;
                 Bitmap labelBitmap = null;
@@ -107,6 +127,7 @@ public class RecommendCommentAdapter extends RecyclerView.Adapter<RecyclerView.V
             itemViewHolder.mTvFloor.setText("#" + comment.getFloor());
             itemViewHolder.mTvTime.setText(TimeUtil.getDescriptionTimeFromTimestamp(comment.getCtime() * 1000));
             itemViewHolder.mTvComment.setText(comment.getRcount() == 0 ? "" : comment.getRcount() + "");
+            itemViewHolder.mVLine.setVisibility(position == mTitleCount - 1 ? View.GONE : View.VISIBLE);
         }
     }
 
@@ -131,6 +152,25 @@ public class RecommendCommentAdapter extends RecyclerView.Adapter<RecyclerView.V
             mTvComment = (TextView) itemView.findViewById(R.id.listitem_recommend_comment_tv_comment);
             mIvMore = (ImageView) itemView.findViewById(R.id.listitem_recommend_comment_iv_more);
             mVLine = itemView.findViewById(R.id.listitem_recommend_comment_v_line);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        }
+    }
+
+    class MoreItemView extends RecyclerView.ViewHolder {
+
+        public MoreItemView(View itemView) {
+            super(itemView);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
         }
     }
 }
