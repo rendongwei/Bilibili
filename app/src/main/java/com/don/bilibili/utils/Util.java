@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -296,6 +297,17 @@ public class Util {
     }
 
     public static Bitmap createRecommendCommentLevel(Context context, int level) {
+        Bitmap bitmap = null;
+        int id = context.getResources().getIdentifier("ic_lv" + level, "drawable", context.getPackageName());
+        if (id == 0) {
+            bitmap = createDrawRecommendCommentLevel(context, level);
+        } else {
+            bitmap = BitmapFactory.decodeResource(context.getResources(), id);
+        }
+        return bitmap;
+    }
+
+    public static Bitmap createDrawRecommendCommentLevel(Context context, int level) {
 
         int dip1 = DisplayUtil.dip2px(context, 1);
         int dip2 = DisplayUtil.dip2px(context, 2);
