@@ -1,14 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-                                            android:id="@+id/recommend_comment_layout_scroll"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="match_parent"
-                                            android:fillViewport="true">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/recommend_comment_layout_container"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recommend_comment_lv_display"
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/recommend_comment_layout_scroll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </android.support.v7.widget.RecyclerView>
+        android:layout_height="0dip"
+        android:fillViewport="true">
 
-</android.support.v4.widget.NestedScrollView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recommend_comment_lv_display"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </android.support.v7.widget.RecyclerView>
+    </android.support.v4.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/recommend_comment_layout_emoji"
+        android:layout_width="match_parent"
+        android:layout_height="40dip"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="40dip"
+            android:layout_height="40dip"
+            android:background="@drawable/bg_black20_selector"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="24dip"
+                android:layout_height="24dip"
+                android:src="@drawable/ic_upper_emoji"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/recommend_comment_et_content"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingBottom="4dip"
+            android:paddingLeft="8dip"
+            android:paddingRight="8dip"
+            android:paddingTop="4dip">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="0dip"
+                android:layout_weight="1"
+                android:background="@color/transparent"
+                android:hint="说点什么"
+                android:padding="4dip"
+                android:textColor="@color/c_999999"
+                android:textColorHint="@color/c_999999"
+                android:textSize="12dip"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dip"
+                android:background="@color/c_999999"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/recommend_comment_layout_send"
+            android:layout_width="40dip"
+            android:layout_height="40dip"
+            android:background="@drawable/bg_black20_selector"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="22dip"
+                android:layout_height="22dip"
+                android:src="@drawable/ic_send_grey"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

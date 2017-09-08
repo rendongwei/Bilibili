@@ -2,9 +2,12 @@ package com.don.bilibili.fragment.recommend;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.ViewTreeObserver;
+import android.widget.LinearLayout;
 
 import com.don.bilibili.R;
 import com.don.bilibili.adapter.RecommendCommentAdapter;
@@ -14,6 +17,7 @@ import com.don.bilibili.http.HttpManager;
 import com.don.bilibili.model.RecommendComment;
 import com.don.bilibili.model.RecommendCommentItem;
 import com.don.bilibili.service.SignService;
+import com.don.bilibili.utils.DisplayUtil;
 import com.don.bilibili.utils.Util;
 
 import org.json.JSONObject;
@@ -27,10 +31,14 @@ import retrofit2.Response;
 
 public class CommentFragment extends BindFragment {
 
+    @Id(id = R.id.recommend_comment_layout_container)
+    private LinearLayout mLayoutContainer;
     @Id(id = R.id.recommend_comment_layout_scroll)
     private NestedScrollView mLayoutScroll;
     @Id(id = R.id.recommend_comment_lv_display)
     private RecyclerView mLvDisplay;
+
+    private int mMaxHeight;
 
     private String mAid;
     private String[] mTs;
@@ -56,6 +64,12 @@ public class CommentFragment extends BindFragment {
 
     @Override
     protected void bindListener() {
+        mLayoutContainer.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mMaxHeight = mLayoutContainer.getMeasuredHeight();
+            }
+        });
         mLayoutScroll.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
 
             @Override
@@ -83,6 +97,14 @@ public class CommentFragment extends BindFragment {
         layoutManager.setAutoMeasureEnabled(true);
         layoutManager.setSmoothScrollbarEnabled(true);
         mLvDisplay.setLayoutManager(layoutManager);
+    }
+
+    public void appLayoutOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+        if (mLayoutScroll != null) {
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mLayoutScroll.getLayoutParams();
+            params.height = mMaxHeight - DisplayUtil.dip2px(mContext, 40) - (appBarLayout.getTotalScrollRange() - Math.abs(verticalOffset));
+            mLayoutScroll.setLayoutParams(params);
+        }
     }
 
     private void getSign() {

@@ -163,6 +163,9 @@ public class RecommendActivity extends TranslucentStatusBarActivity implements V
         mLayoutAppBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (mCommentFragment != null) {
+                    mCommentFragment.appLayoutOffsetChanged(appBarLayout, verticalOffset);
+                }
                 if (Math.abs(verticalOffset) >= appBarLayout.getTotalScrollRange() && appBarLayout.getTotalScrollRange() != 0) {
                     mLayoutTitlePlay.setVisibility(View.VISIBLE);
                     mTvTitle.setVisibility(View.INVISIBLE);
