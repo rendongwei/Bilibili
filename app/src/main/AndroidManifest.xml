@@ -32,11 +32,11 @@
             android:name=".activity.live.LiveActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="adjustPan"/>
-
         <activity
             android:name=".activity.recommend.RecommendActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".activity.recommend.RecommendMoreHotCommentActivity"/>
 
         <service
             android:name=".service.SignService"
