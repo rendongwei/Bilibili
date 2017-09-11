@@ -95,6 +95,7 @@ public class RecommendMoreHotCommentAdapter extends RecyclerView.Adapter<Recycle
             itemViewHolder.mTvFloor.setText("#" + comment.getFloor());
             itemViewHolder.mTvTime.setText(TimeUtil.getDescriptionTimeFromTimestamp(comment.getCtime() * 1000));
             itemViewHolder.mTvComment.setText(comment.getRcount() == 0 ? "" : comment.getRcount() + "");
+            itemViewHolder.mLvDisplay.setAdapter(new RecommendMoreHotCommentItemAdapter(mContext, comment.getReplies()));
         }
     }
 
